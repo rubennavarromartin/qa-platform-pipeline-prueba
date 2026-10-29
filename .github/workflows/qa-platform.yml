@@ -1,0 +1,44 @@
+# QA Platform: la puerta de pre con la aprobación en GitHub (la opción A).
+#
+# En una pipeline de verdad, qa_pre lanza `ci.js --para-con-huecos
+# --aprobar-en-el-ci` y huecos_pre lanza `ci.js --aceptar-desde-el-ci`, los dos
+# en un runner que llegue a la plataforma (es el YAML que da la ficha). Aquí la
+# plataforma vive en localhost y el repositorio es público, así que no hay
+# runner propio: los dos pasos de ci.js se lanzan desde la máquina de la
+# plataforma con las variables de este run, y estos trabajos sólo hacen lo que
+# es de GitHub: dar la salida y retener el environment hasta que se apruebe.
+name: QA Platform
+on:
+  workflow_dispatch:
+jobs:
+  qa_pre:
+    name: "QA en pre"
+    runs-on: ubuntu-latest
+    outputs:
+      huecos: ${{ steps.qa.outputs.huecos }}
+    steps:
+      - name: "QA en pre"
+        id: qa
+        run: |
+          echo "huecos=si" >> "$GITHUB_OUTPUT"
+          echo "### QA Platform: 1 hueco sin cubrir en CRM Laboratory · pre" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "js/companies/companyForm.js declara companyWebsite, que el Build no ha visto. Aprobar qa-huecos es aceptar promocionarlo sin cubrir: escribe el motivo en el comentario." >> "$GITHUB_STEP_SUMMARY"
+
+  huecos_pre:
+    name: "Aceptar los huecos de pre"
+    needs: qa_pre
+    if: needs.qa_pre.outputs.huecos == 'si'
+    runs-on: ubuntu-latest
+    environment: "qa-huecos"
+    steps:
+      - name: Aprobado
+        run: echo "Aprobado. La plataforma pregunta a GitHub quién lo aprobó y con qué comentario."
+
+  desplegar_pro:
+    name: "Desplegar a pro"
+    needs: [qa_pre, huecos_pre]
+    if: ${{ always() && needs.qa_pre.result == 'success' && needs.huecos_pre.result != 'failure' && needs.huecos_pre.result != 'cancelled' }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Aquí iría el despliegue a pro."
