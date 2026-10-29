@@ -108,6 +108,14 @@ const CompanyForm = (() => {
                 value="${company.taxId || ""}">
         </label>
 
+        <label>
+            Sitio web
+            <input
+                id="companyWebsite"
+                type="url"
+                value="${company.website || ""}">
+        </label>
+
     </fieldset>
 
     <fieldset class="paso" hidden>
@@ -211,6 +219,20 @@ ${opciones(Provinces.municipiosDe(provinciaDe(company)), company.city)}
 
             taxId: document
                 .getElementById("companyTaxId")
+                .value
+                .trim(),
+
+            /*
+            * Sólo en `crm_dev`, a propósito: es lo que tiene el entorno de
+            * desarrollo y todavía no ha llegado a `pre` ni a `pro`, la
+            * funcionalidad nueva del piloto de la Idea 19. Con ella se ve si
+            * la plataforma asocia lo que coincide entre entornos y deja suelto
+            * lo que no, y qué pasa al promocionar una prueba suya a un entorno
+            * que no lo tiene. Se "despliega" copiando la carpeta.
+            */
+
+            website: document
+                .getElementById("companyWebsite")
                 .value
                 .trim(),
 
