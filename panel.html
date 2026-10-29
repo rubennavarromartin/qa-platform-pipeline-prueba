@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Cuadro de mando · CRM Laboratory</title>
+
+    <link rel="stylesheet" href="css/marca.css">
+    <link rel="stylesheet" href="css/crm.css">
+
+    <script src="js/entorno.js"></script>
+    <script src="js/tema.js"></script>
+
+</head>
+
+<body data-modulo="panel">
+
+<a class="saltar" href="#contenido">
+    Saltar al contenido
+</a>
+
+<div class="disposicion">
+
+    <aside class="lateral" id="lateral"></aside>
+
+    <main class="principal" id="contenido">
+
+<!--
+    El cuadro de mando.
+
+    Esta pantalla existe para plantearle una pregunta concreta a la
+    plataforma: **una pantalla que ninguna regla sabe leer**.
+
+    No tiene tabla con cabeceras, ni formulario con etiquetas, ni
+    buscador, ni pestañas, ni kanban. Lo que tiene son cifras dentro
+    de cajas y dos botones. El Discovery entra, lo recorre, y no
+    puede decir qué es: es lo que en la plataforma se llama una
+    pantalla "a oscuras", y es exactamente el material de la IA de
+    interpretación.
+
+    Y no es un caso inventado para la ocasión: cualquier CRM tiene su
+    cuadro de mando, y ninguno lo hace con una tabla.
+
+    Las cifras salen de los repositorios, así que se pueden
+    comprobar contra los listados: si el panel dice 14 empresas y en
+    Empresas hay 15, una de las dos pantallas miente. Eso es lo que
+    una prueba podrá afirmar el día que la plataforma sepa que esto
+    es un panel de indicadores.
+
+    Lo siguiente que se le va a pedir a esta pantalla, apuntado en
+    SPRINT.md y sin hacer: que cada caja de cifra sea **además un
+    botón**, y que debajo aparezca una gráfica por meses con la línea
+    del indicador que se haya pulsado. Son cuatro preguntas nuevas de
+    golpe —un control que se llama por su propio dato, una gráfica
+    que no tiene texto que leer, un botón que manda sobre una región,
+    y una serie que tiene que cuadrar con el indicador— y el porqué
+    de cada una está allí.
+-->
+
+<div id="vistaListado">
+
+    <h1>Cuadro de mando</h1>
+
+    <p class="ayuda">
+        Lo que hay ahora mismo en el CRM. Las cifras se calculan al
+        abrir la pantalla.
+    </p>
+
+    <div class="acciones" id="panelAcciones">
+
+        <!--
+            El ejercicio con el que se está mirando el panel.
+
+            Filtra la pantalla entera —las seis cifras y las seis
+            gráficas— y **no cambia el de Configuración**: ahí el
+            ejercicio numera los códigos de presupuesto, y mirar el
+            panel de otro año no puede tener el efecto de que el
+            siguiente presupuesto se numere distinto.
+
+            Es un control que manda sobre toda la pantalla, y eso la
+            plataforma sabe reconocerlo dentro de un formulario pero
+            no fuera.
+        -->
+
+        <label class="panelEjercicio" for="panelEjercicio">
+            Ejercicio
+            <select id="panelEjercicio"></select>
+        </label>
+
+        <button id="refreshPanelButton" class="btn-primary" type="button">
+            Actualizar cifras
+        </button>
+
+        <button id="exportPanelButton" class="btn-secondary" type="button">
+            Exportar a texto
+        </button>
+
+    </div>
+
+    <!--
+        Las cifras. Cada una es una caja con su número, su nombre y
+        una línea que lo explica; ni una etiqueta de formulario ni
+        una cabecera de tabla en toda la pantalla.
+
+        Y cada caja es además una **pestaña**: pulsarla no hace nada,
+        elige qué serie se dibuja debajo. Por eso la barra es un
+        `tablist` y no seis botones sueltos — el porqué entero está en
+        `js/panel/app.js`.
+    -->
+
+    <div class="indicadores"
+         id="indicadores"
+         role="tablist"
+         aria-label="Indicadores"></div>
+
+    <!--
+        Y la evolución por meses del indicador que se haya elegido, una
+        región por indicador: el patrón de ARIA pide un panel por
+        pestaña, y así el que no se ve tampoco se lee.
+    -->
+
+    <div id="graficas"></div>
+
+    <p id="panelAviso" class="aviso" role="status"></p>
+
+</div>
+
+    </main>
+
+</div>
+
+    <script src="js/quotes/codigos.js"></script>
+    <script src="js/quotes/quoteRepository.js"></script>
+    <script src="js/companies/companyRepository.js"></script>
+    <script src="js/contacts/contacts.js"></script>
+    <script src="js/agenda/appointmentRepository.js"></script>
+    <script src="js/users/userRepository.js"></script>
+    <script src="js/roles/roleRepository.js"></script>
+
+    <script src="js/components/toast.js"></script>
+    <script src="js/components/navigation.js"></script>
+    <script src="js/components/session.js"></script>
+    <script src="js/components/permissions.js"></script>
+    <script src="js/components/settings.js"></script>
+    <script src="js/components/activityLog.js"></script>
+    <script src="js/components/tabs.js"></script>
+    <script src="js/components/layout.js"></script>
+
+    <script src="js/panel/app.js"></script>
+
+</body>
+
+</html>

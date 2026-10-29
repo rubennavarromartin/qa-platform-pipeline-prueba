@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Ayuda · CRM Laboratory</title>
+
+    <link rel="stylesheet" href="css/marca.css">
+    <link rel="stylesheet" href="css/crm.css">
+
+    <script src="js/entorno.js"></script>
+    <script src="js/tema.js"></script>
+
+</head>
+
+<body data-modulo="ayuda">
+
+<a class="saltar" href="#contenido">
+    Saltar al contenido
+</a>
+
+<div class="disposicion">
+
+    <aside class="lateral" id="lateral"></aside>
+
+    <main class="principal" id="contenido">
+
+<!--
+    La ayuda: el manual de usuario y el de administrador.
+
+    Y es, como todo lo que se le añade a este laboratorio, una
+    pregunta para la plataforma que lo prueba. Tres a la vez:
+
+    Una pantalla que **no tiene datos**. Ni rejilla, ni
+    formulario, ni cifras, ni acciones: sólo texto. Las demás
+    pantallas se reconocen por lo que se puede hacer en ellas, y
+    aquí no se puede hacer nada.
+
+    Unas **pestañas que no son de una ficha**. El componente es el
+    mismo que el de la ficha de una empresa, así que la plataforma
+    debería reconocerlas igual; lo que cambia es que detrás no hay
+    ningún registro.
+
+    Y contenido que **llega después**. El manual no está en este
+    HTML: se pide con `fetch` al abrir la pestaña. Quien mire la
+    pantalla antes de que llegue verá dos paneles vacíos, que es
+    exactamente lo que le pasa a la plataforma con las tablas que
+    parecen vacías porque se miran demasiado pronto.
+-->
+
+<div id="vistaListado">
+
+    <h1>Ayuda</h1>
+
+    <p class="ayuda">
+        Cómo se usa el CRM y cómo se administra.
+    </p>
+
+    <!--
+        Y el mockup, que no es un manual y por eso no es una pestaña: es una
+        pantalla aparte, hecha mal a propósito, que sirve de banco de pruebas
+        del Discovery.
+
+        Va aquí porque es donde se busca lo que no se encuentra en otro
+        sitio, y porque **desde aquí lo encuentra también la plataforma**: el
+        Discovery llega a las pantallas siguiendo enlaces, así que enlazarlo
+        es lo que hace que se explore en cada Build. Eso es lo que se quería
+        — que sus fallos salten solos.
+    -->
+
+    <p class="ayuda">
+        <a href="mockup.html" id="irAlMockup">Mockup</a> —
+        una pantalla hecha mal a propósito, para comprobar que la plataforma
+        se da cuenta.
+    </p>
+
+    <nav
+        class="pestanas"
+        role="tablist"
+        aria-label="Manuales">
+
+        <button
+            id="ayudaTabUsuario"
+            type="button"
+            role="tab"
+            aria-controls="ayudaPanelUsuario"
+            aria-selected="true">
+            Manual de usuario
+        </button>
+
+        <button
+            id="ayudaTabAdministrador"
+            type="button"
+            role="tab"
+            aria-controls="ayudaPanelAdministrador"
+            aria-selected="false">
+            Manual de administrador
+        </button>
+
+    </nav>
+
+    <!--
+        Cada manual va dentro de un `article`, y no es un adorno del
+        marcado: **es** un artículo — un texto que se lee de principio a
+        fin y que se sostiene solo. El `section` de fuera es el panel de
+        su pestaña, que es otra cosa.
+    -->
+
+    <section
+        id="ayudaPanelUsuario"
+        role="tabpanel"
+        aria-labelledby="ayudaTabUsuario"
+        data-manual="manual-de-usuario">
+
+        <article class="manual"></article>
+
+    </section>
+
+    <section
+        id="ayudaPanelAdministrador"
+        role="tabpanel"
+        aria-labelledby="ayudaTabAdministrador"
+        data-manual="manual-de-administrador"
+        hidden>
+
+        <article class="manual"></article>
+
+    </section>
+
+</div>
+
+    <div id="modalContainer"></div>
+
+    </main>
+
+</div>
+
+    <script src="js/users/userRepository.js"></script>
+    <script src="js/roles/roleRepository.js"></script>
+
+    <script src="js/components/toast.js"></script>
+    <script src="js/components/navigation.js"></script>
+    <script src="js/components/session.js"></script>
+    <script src="js/components/permissions.js"></script>
+    <script src="js/components/tabs.js"></script>
+    <script src="js/components/layout.js"></script>
+
+    <script src="js/help/app.js"></script>
+
+</body>
+
+</html>

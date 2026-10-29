@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Gastos · CRM Laboratory</title>
+
+    <link rel="stylesheet" href="css/marca.css">
+    <link rel="stylesheet" href="css/crm.css">
+
+    <script src="js/entorno.js"></script>
+    <script src="js/tema.js"></script>
+
+</head>
+
+<body data-modulo="gastos">
+
+<a class="saltar" href="#contenido">
+    Saltar al contenido
+</a>
+
+<div class="disposicion">
+
+    <aside class="lateral" id="lateral"></aside>
+
+    <main class="principal" id="contenido">
+
+<!--
+    Los gastos de un comercial.
+
+    Esta pantalla existe por una sola razón, y conviene tenerla
+    delante antes de tocarle nada: **su botón de alta no se llama
+    "Nuevo gasto"**. Se llama "Subir gasto".
+
+    El porqué
+
+      `detectAction` reconocía la acción de un botón mirando si su
+      texto empieza por una de seis palabras castellanas —nuevo,
+      buscar, editar, eliminar, guardar, cancelar—. Todo lo demás
+      era "no sé qué hace".
+
+      En Bitácora eso incluye "Subir gasto" y "Solicitar
+      vacaciones", que son dos altas. Y ni siquiera hace falta
+      cambiar de idioma para que falle: son castellano del bueno.
+
+      La tentación era añadir las palabras inglesas, y eso mueve el
+      fallo al tercer idioma. La respuesta es la de esta casa:
+      reconocer por lo que algo **hace** y no por cómo se llama —se
+      pulsa, se mira si abre un formulario, y un botón de la
+      pantalla que abre un formulario es un alta.
+
+    Qué pregunta
+
+      Si la plataforma reconoce este alta. Si no lo hace, esta
+      pantalla se queda sin su prueba de CREATE y sin todo lo que
+      cuelga de tener un formulario de alta, y eso se ve contando.
+
+      Y por eso el botón está aquí y no en una pantalla que ya
+      tenga un "Nuevo algo": con dos botones de alta no se sabría
+      cuál de los dos ha reconocido.
+
+    Lo que NO se ha hecho a propósito
+
+      Ponerle `aria-label="Nuevo gasto"`. Sería hacer trampas: el
+      nombre accesible se lee antes que el texto, así que el botón
+      volvería a reconocerse por cómo se llama y la pregunta
+      desaparecería.
+-->
+
+<div id="vistaListado">
+
+    <h1>Gastos</h1>
+
+    <section id="panelListado">
+
+        <div class="toolbar">
+
+            <div class="toolbar-left">
+
+                <button id="btnNuevo" class="primario">
+                    Subir gasto
+                </button>
+
+                <!--
+                | Y el de al lado, que plantea la otra mitad de la misma
+                | pregunta.
+                |
+                | "Exportar" tampoco empieza por ninguna de las seis palabras,
+                | y también abre un diálogo con campos — pero **no es un
+                | alta**: pide un rango de fechas y descarga un fichero.
+                |
+                | Está copiado de Bitácora, donde su "Exportar" del histórico
+                | de cambios coló como alta el 1 de octubre de 2026 con la
+                | primera versión de la regla. Una prueba de CREATE sobre un
+                | exportador falla siempre, y ése es un rojo que no es de la
+                | aplicación.
+                |
+                | Lo que los separa, y es lo que la regla mira: **un alta
+                | exige datos y un filtro no**. El alta de aquí tiene dos
+                | campos obligatorios; el exportador, ninguno — sin filtro se
+                | exporta todo, y eso es una respuesta válida.
+                |
+                | Y sus campos de fecha son `type="text"`, como en Bitácora.
+                | La primera acotación miraba el tipo del campo y funcionaba
+                | aquí, donde estaban escritos como `type="date"`, y no en la
+                | aplicación de verdad: un caso montado a mano que no se parece
+                | al real avala una regla que no sirve.
+                -->
+
+                <button id="btnExportar" class="secundario">
+                    Exportar
+                </button>
+
+                <!--
+                | Y un panel lateral de filtros, como "Filtros avancados" de
+                | Faturas en SABESP: el botón abre por la derecha un panel con
+                | role="complementary" —no es un diálogo— cuyo contenido no
+                | existe hasta abrirlo. Se comporta como el de allí, medido el
+                | 17 de octubre de 2026: Escape lo cierra, "Aplicar filtros"
+                | filtra y lo cierra, y al reabrirlo conserva lo elegido. Hasta
+                | ese día la plataforma no veía sus campos: no están en la
+                | pantalla cuando se lee.
+                -->
+
+                <button id="btnMasFiltros" class="secundario" type="button">
+                    Más filtros
+                </button>
+
+            </div>
+
+            <!--
+            | Un interruptor suelto que filtra el listado, vestido como el
+            | `p-toggleswitch` de SABESP —"Somente meses apurados" en
+            | Orçamento—: el campo de verdad es transparente y está encima de
+            | su dibujo. Plantea dos preguntas a la vez, y hasta el 16 de
+            | octubre de 2026 la plataforma no contestaba ninguna: que una
+            | casilla suelta puede mandar sobre la pantalla —sólo se probaban
+            | desplegables— y que un campo que no se ve puede ser el que se
+            | pulsa. No guarda nada: sólo cambia lo que se enseña.
+            -->
+
+            <span class="interruptor">
+
+                <label for="soloPendientes">Sólo pendientes</label>
+
+                <span class="interruptor-caja">
+
+                    <input
+                        id="soloPendientes"
+                        class="interruptor-campo"
+                        type="checkbox"
+                        role="switch">
+
+                    <span class="interruptor-dibujo"></span>
+
+                </span>
+
+            </span>
+
+            <!--
+            | Y unos botones de alternativa, como el `p-selectbutton` de
+            | SABESP —"Nivel de navegacao" en Orçamento—: un grupo de opciones
+            | que se pulsan, de las que una está elegida (`aria-pressed`), y
+            | que cambian cómo se enseña lo que hay. No son `button` sino
+            | elementos que se declaran botón, y la etiqueta está al lado sin
+            | enlazar, como allí. Hasta el 17 de octubre de 2026 la plataforma
+            | no los veía: sólo recogía botones de verdad, y aunque los hubiera
+            | visto los habría tratado como botones sueltos y no como lo que
+            | son, un campo con forma de botones.
+            -->
+
+            <span class="alternativas">
+
+                <label>Importes</label>
+
+                <span class="alternativas-grupo" role="group">
+
+                    <span role="button" tabindex="0" aria-pressed="true" data-iva="con">Con IVA</span>
+
+                    <span role="button" tabindex="0" aria-pressed="false" data-iva="sin">Sin IVA</span>
+
+                </span>
+
+            </span>
+
+            <input
+                id="search"
+                type="text"
+                placeholder="Buscar en los gastos...">
+
+        </div>
+
+        <table id="gastosGrid">
+
+            <thead>
+
+                <tr>
+
+                    <th>Concepto</th>
+                    <th>Fecha</th>
+                    <th>Importe</th>
+                    <th>Estado</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            </tbody>
+
+        </table>
+
+        <p
+            id="gastosVacio"
+            class="aviso"
+            role="status">
+        </p>
+
+        <div id="paginacion"></div>
+
+    </section>
+
+</div>
+
+    <aside id="panelFiltros" class="panel-filtros" role="complementary" aria-label="Filtros" hidden></aside>
+
+    <div id="modalContainer"></div>
+
+    </main>
+
+</div>
+
+    <script src="js/components/badge.js"></script>
+    <script src="js/components/toast.js"></script>
+    <script src="js/components/confirm.js"></script>
+    <script src="js/components/modal.js"></script>
+    <script src="js/components/navigation.js"></script>
+    <script src="js/components/session.js"></script>
+    <script src="js/components/permissions.js"></script>
+    <script src="js/components/activityLog.js"></script>
+    <script src="js/components/pagination.js"></script>
+    <script src="js/components/layout.js"></script>
+
+    <script src="js/gastos/gastoRepository.js"></script>
+    <script src="js/gastos/app.js"></script>
+
+</body>
+
+</html>

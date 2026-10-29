@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Empresas · CRM Laboratory</title>
+
+    <link rel="stylesheet" href="css/marca.css">
+    <link rel="stylesheet" href="css/crm.css">
+
+    <!--
+    | El tema se fija antes de pintar nada, para que la página no
+    | aparezca un instante en claro antes de ponerse oscura.
+    -->
+
+    <script src="js/entorno.js"></script>
+    <script src="js/tema.js"></script>
+
+</head>
+
+<body data-modulo="companies">
+
+<!--
+El contenedor de avisos que PrimeNG deja siempre puesto: un alertdialog
+vacío y escondido, delante de todo lo demás. Está en todas las pantallas de
+SABESP, y con él las pruebas que buscaban "el primer diálogo" se quedaban
+mirando éste en lugar del formulario que se acababa de abrir: 74 rojas de 110
+en su pasada del 15 de octubre de 2026.
+-->
+<div role="alertdialog" aria-modal="true" class="avisos-vacio" hidden></div>
+
+
+<a class="saltar" href="#contenido">
+    Saltar al contenido
+</a>
+
+<div class="disposicion">
+
+    <aside class="lateral" id="lateral"></aside>
+
+    <main class="principal" id="contenido">
+
+<!--
+    Dos vistas en el mismo fichero, y la dirección decide cuál:
+
+        companies.html          el listado
+        companies.html?id=2     la ficha de una empresa
+
+    La ficha tiene dirección propia a propósito. "Esta empresa"
+    dejaba de significar algo en cuanto recargabas la página o
+    pasabas el enlace a alguien.
+-->
+
+<div id="vistaListado">
+
+    <h1>Empresas</h1>
+
+
+    <section id="panelListado">
+
+        <!--
+        | Dos tarjetas que dicen un número de esta misma pantalla, y son un
+        | caso montado a propósito para la prueba de coherencia.
+        |
+        | "A la vista" cuenta las filas que se están viendo, así que baja al
+        | buscar. "En el catálogo" enseña el total y no se mueve — que es
+        | exactamente lo que hace el contador de un menú.
+        |
+        | Las dos se llaman "Empresas" en su nombre, y ésa es la trampa: quien
+        | empareje la tarjeta con la tabla por el texto se lleva las dos, y una
+        | de ellas no cuenta lo que se ve. Sólo se distinguen moviendo la
+        | pantalla.
+        -->
+
+        <div class="indicadores">
+
+            <div class="indicador"
+                 id="cifraALaVista"
+                 aria-labelledby="cifraALaVistaNombre">
+
+                <span class="indicadorValor" aria-hidden="true">0</span>
+
+                <span class="indicadorNombre"
+                      id="cifraALaVistaNombre">Empresas a la vista</span>
+
+            </div>
+
+            <div class="indicador"
+                 id="cifraEnElCatalogo"
+                 aria-labelledby="cifraEnElCatalogoNombre">
+
+                <span class="indicadorValor" aria-hidden="true">0</span>
+
+                <span class="indicadorNombre"
+                      id="cifraEnElCatalogoNombre">Empresas en el catálogo</span>
+
+            </div>
+
+            <!--
+            | Y la trampa de verdad, que es la que obliga a medir dos veces.
+            |
+            | "Listadas" se calcula **una sola vez**, al pintar por primera
+            | vez, y no se vuelve a tocar. Así que sin filtrar vale lo mismo
+            | que las filas —y por ahí pasa cualquier emparejamiento por el
+            | nombre, y también la primera de las dos condiciones— y al
+            | filtrar se queda donde estaba.
+            |
+            | Es el fallo que esta prueba existe para cazar, puesto aquí a
+            | propósito: el contador que se queda pegado al primer valor. La
+            | otra tarjeta no sirve para esto porque el catálogo tiene catorce
+            | empresas y la página enseña diez, así que ya falla en la primera
+            | comprobación y la segunda no llega a trabajar.
+            -->
+
+            <div class="indicador"
+                 id="cifraListadas"
+                 aria-labelledby="cifraListadasNombre">
+
+                <span class="indicadorValor" aria-hidden="true">0</span>
+
+                <span class="indicadorNombre"
+                      id="cifraListadasNombre">Empresas listadas</span>
+
+            </div>
+
+        </div>
+
+        <div class="toolbar">
+
+            <button
+                id="newCompanyButton"
+                class="btn-primary">
+                Nueva empresa
+            </button>
+
+            <input
+                id="search"
+                type="text"
+                placeholder="Buscar empresa...">
+
+        </div>
+
+        <table id="companiesGrid">
+
+            <thead>
+
+                <tr>
+
+
+                    <th class="columna-seleccion">
+                        <input
+                            type="checkbox"
+                            id="seleccionTodo"
+                            aria-label="Seleccionar todo lo que se ve">
+                    </th>
+                    <th>Empresa</th>
+                    <th>CIF</th>
+                    <th>Ciudad</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            </tbody>
+
+        </table>
+
+        <div class="seleccion-barra">
+
+            <span id="seleccionEstado" role="status"></span>
+
+            <button
+                id="borrarSeleccionButton"
+                class="btn-delete"
+                type="button"
+                disabled>
+                🗑 Eliminar seleccionados
+            </button>
+
+        </div>
+
+
+        <div id="paginacion"></div>
+
+    </section>
+
+
+</div>
+
+<!-- LA FICHA DE UNA EMPRESA -->
+
+<div id="vistaFicha" hidden>
+
+    <nav class="migas">
+
+        <a
+            id="fichaVolver"
+            class="btn-volver"
+            href="companies.html">
+            ← Empresas
+        </a>
+
+    </nav>
+
+    <h1 id="fichaTitulo"></h1>
+
+    <p
+        id="fichaNoExiste"
+        class="aviso error"
+        role="status"
+        hidden>
+    </p>
+
+    <nav
+        class="pestanas"
+        role="tablist"
+        aria-label="Secciones de la ficha">
+
+        <button
+            id="fichaTabDatos"
+            type="button"
+            role="tab"
+            aria-controls="fichaPanelDatos"
+            aria-selected="true">
+            Datos
+        </button>
+
+        <button
+            id="fichaTabContactos"
+            type="button"
+            role="tab"
+            aria-controls="fichaPanelContactos"
+            aria-selected="false">
+            Contactos
+        </button>
+
+        <button
+            id="fichaTabProyectos"
+            type="button"
+            role="tab"
+            aria-controls="fichaPanelProyectos"
+            aria-selected="false">
+            Proyectos
+        </button>
+
+        <button
+            id="fichaTabPresupuestos"
+            type="button"
+            role="tab"
+            aria-controls="fichaPanelPresupuestos"
+            aria-selected="false">
+            Presupuestos
+        </button>
+
+        <button
+            id="fichaTabCitas"
+            type="button"
+            role="tab"
+            aria-controls="fichaPanelCitas"
+            aria-selected="false">
+            Citas
+        </button>
+
+        <button
+            id="tabDocumentacion"
+            type="button"
+            role="tab"
+            aria-controls="panelDocumentacion"
+            aria-selected="false">
+            Documentación
+        </button>
+
+        <button
+            id="tabComentarios"
+            type="button"
+            role="tab"
+            aria-controls="panelComentarios"
+            aria-selected="false">
+            Comentarios
+        </button>
+
+    </nav>
+
+    <section
+        id="fichaPanelDatos"
+        role="tabpanel"
+        aria-labelledby="fichaTabDatos">
+
+
+    <div class="toolbar">
+
+        <button
+            id="fichaEditarButton"
+            class="btn-primary"
+            type="button"
+            hidden>
+            Editar
+        </button>
+
+    </div>
+
+        <dl id="fichaDatos" class="datos"></dl>
+
+    </section>
+
+    <section
+        id="fichaPanelContactos"
+        role="tabpanel"
+        aria-labelledby="fichaTabContactos"
+        hidden>
+
+        <h2 id="fichaContactosTitulo">Contactos</h2>
+
+        <!--
+            El alta desde la propia pestaña.
+
+            El contacto nace con esta empresa puesta: se está
+            dando de alta desde su ficha, así que preguntarla
+            otra vez sería preguntar algo que ya se sabe.
+        -->
+
+        <div class="toolbar">
+
+            <button
+                id="fichaNuevoContactoButton"
+                class="btn-primary"
+                type="button">
+                Nuevo contacto
+            </button>
+
+        </div>
+
+        <p
+            id="fichaContactosVacio"
+            class="aviso"
+            role="status">
+        </p>
+
+        <table id="fichaContactosGrid" hidden>
+
+            <thead>
+                <tr id="fichaContactosCabecera"></tr>
+            </thead>
+
+            <tbody>
+            </tbody>
+
+        </table>
+
+    </section>
+
+    <!--
+        Los presupuestos de la empresa.
+
+        Es la segunda relación que cuelga de esta ficha, y la
+        primera que enseña dinero: el importe de cada uno sale de
+        sumar sus líneas, no de un campo del registro.
+    -->
+
+    <!--
+        Los proyectos de la empresa.
+
+        Un proyecto cuelga de una empresa y una empresa puede tener muchos,
+        así que desde aquí se ven los suyos. Se buscan por el identificador
+        de la empresa y no por su nombre: si alguien la renombra, sus
+        proyectos siguen siendo suyos.
+    -->
+
+    <section
+        id="fichaPanelProyectos"
+        role="tabpanel"
+        aria-labelledby="fichaTabProyectos"
+        hidden>
+
+        <h2 id="fichaProyectosTitulo">Proyectos</h2>
+
+        <p
+            id="fichaProyectosVacio"
+            class="aviso"
+            role="status">
+        </p>
+
+        <table id="fichaProyectosGrid" hidden>
+
+            <thead>
+                <tr id="fichaProyectosCabecera"></tr>
+            </thead>
+
+            <tbody>
+            </tbody>
+
+        </table>
+
+    </section>
+
+    <section
+        id="fichaPanelPresupuestos"
+        role="tabpanel"
+        aria-labelledby="fichaTabPresupuestos"
+        hidden>
+
+        <h2 id="fichaPresupuestosTitulo">Presupuestos</h2>
+
+        <div class="toolbar">
+
+            <button
+                id="fichaNuevoPresupuestoButton"
+                class="btn-primary"
+                type="button">
+                Nuevo presupuesto
+            </button>
+
+        </div>
+
+        <p
+            id="fichaPresupuestosVacio"
+            class="aviso"
+            role="status">
+        </p>
+
+        <table id="fichaPresupuestosGrid" hidden>
+
+            <thead>
+                <tr id="fichaPresupuestosCabecera"></tr>
+            </thead>
+
+            <tbody>
+            </tbody>
+
+        </table>
+
+    </section>
+
+    <!--
+        Las citas de la empresa: las de todos sus contactos.
+
+        Es la tercera relación de esta ficha y la primera de
+        segunda mano: una cita se concierta con un contacto, y el
+        contacto pertenece a la empresa. Aquí se ven todas juntas
+        sin tener que entrar en cada contacto.
+    -->
+
+    <section
+        id="fichaPanelCitas"
+        role="tabpanel"
+        aria-labelledby="fichaTabCitas"
+        hidden>
+
+        <h2 id="fichaCitasTitulo">Citas</h2>
+
+        <!--
+            La cita nace con la empresa puesta y el contacto en
+            blanco: quién la atiende se elige de entre los
+            contactos de esta empresa, y eso no lo puede decidir
+            la ficha.
+        -->
+
+        <div class="toolbar">
+
+            <button
+                id="fichaNuevaCitaButton"
+                class="btn-primary"
+                type="button">
+                Nueva cita
+            </button>
+
+        </div>
+
+        <p
+            id="fichaCitasVacio"
+            class="aviso"
+            role="status">
+        </p>
+
+        <table id="fichaCitasGrid" hidden>
+
+            <thead>
+                <tr id="fichaCitasCabecera"></tr>
+            </thead>
+
+            <tbody>
+            </tbody>
+
+        </table>
+
+    </section>
+
+
+    <section
+        id="panelDocumentacion"
+        role="tabpanel"
+        aria-labelledby="tabDocumentacion"
+        hidden>
+
+        <div class="toolbar">
+
+            <div class="subida">
+
+                <label for="documentFile">
+                    Fichero
+                </label>
+
+                <!--
+                | Qué tipos admite, declarado donde una máquina puede
+                | leerlo.
+                |
+                | `accept` no impide nada: es una ayuda para el cuadro de
+                | elegir fichero, y cualquiera que arrastre uno o use una
+                | herramienta se lo salta. Por eso la comprobación de verdad
+                | está en el código que sube — las dos cosas hacen falta, y
+                | tener sólo la primera es el fallo que la plataforma viene a
+                | cazar.
+                -->
+
+                <input
+                    id="documentFile"
+                    type="file"
+                    accept=".pdf,.png,.jpg,.jpeg,.txt">
+
+                <button
+                    id="uploadDocumentButton"
+                    class="btn-primary"
+                    type="button">
+                    Subir documento
+                </button>
+
+            </div>
+
+        </div>
+
+        <p
+            id="documentAviso"
+            class="aviso"
+            role="status">
+        </p>
+
+        <table id="documentsGrid">
+
+            <thead>
+
+                <tr>
+
+                    <th class="columna-tirador"><span class="soloLectores">Orden</span></th>
+
+                    <th>Documento</th>
+                    <th>Tipo</th>
+                    <th>Tamaño</th>
+                    <th>Subido</th>
+                    <th>Acciones</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            </tbody>
+
+        </table>
+
+    </section>
+
+    <section
+        id="panelComentarios"
+        role="tabpanel"
+        aria-labelledby="tabComentarios"
+        hidden>
+
+        <div class="comentario-nuevo">
+
+            <textarea
+                id="commentText"
+                rows="6"
+                aria-label="Comentario"
+                placeholder="Escribe un comentario..."></textarea>
+
+            <button
+                id="addCommentButton"
+                class="btn-primary"
+                type="button">
+                Comentar
+            </button>
+
+        </div>
+
+        <p
+            id="commentAviso"
+            class="aviso"
+            role="status">
+        </p>
+
+        <div class="toolbar">
+
+            <input
+                id="commentFilter"
+                type="text"
+                placeholder="Filtrar comentarios...">
+
+            <label for="commentOrder">
+                Ordenar por
+            </label>
+
+            <select id="commentOrder">
+                <option value="puestos">Como están puestos</option>
+                <option value="fecha">Fecha</option>
+                <option value="usuario">Usuario</option>
+            </select>
+
+            <label for="commentDirection">
+                Sentido
+            </label>
+
+            <select id="commentDirection">
+                <option value="asc">Ascendente</option>
+                <option value="desc">Descendente</option>
+            </select>
+
+        </div>
+
+        <p
+            id="commentsMoverNota"
+            class="aviso"
+            role="status"
+            hidden>
+            Con un orden puesto los comentarios no se pueden mover.
+            Vuelve a "Como están puestos" para colocarlos a mano.
+        </p>
+
+        <ul
+            id="commentsList"
+            class="comentarios">
+        </ul>
+
+        <p
+            id="commentsVacio"
+            class="aviso"
+            role="status">
+        </p>
+
+    </section>
+
+</div>
+
+    <div id="modalContainer"></div>
+
+    </main>
+
+</div>
+
+    <script src="js/companies/companyRepository.js"></script>
+    <script src="js/companies/provinces.js"></script>
+    <script src="js/contacts/contacts.js"></script>
+    <script src="js/agenda/appointmentRepository.js"></script>
+    <script src="js/quotes/codigos.js"></script>
+    <script src="js/quotes/quoteRepository.js"></script>
+
+    <script src="js/users/userRepository.js"></script>
+    <script src="js/roles/roleRepository.js"></script>
+
+    <script src="js/components/toast.js"></script>
+    <script src="js/components/confirm.js"></script>
+    <script src="js/components/dataTable.js"></script>
+    <script src="js/components/badge.js"></script>
+    <script src="js/components/modal.js"></script>
+    <script src="js/components/navigation.js"></script>
+    <script src="js/components/tabs.js"></script>
+    <script src="js/components/detail.js"></script>
+    <script src="js/components/relations.js"></script>
+    <script src="js/components/relatedTable.js"></script>
+    <script src="js/projects/projectStatuses.js"></script>
+    <script src="js/projects/projects.js"></script>
+    <script src="js/components/wizard.js"></script>
+    <script src="js/components/autocomplete.js"></script>
+    <script src="js/components/documents.js"></script>
+    <script src="js/components/session.js"></script>
+    <script src="js/components/permissions.js"></script>
+    <script src="js/components/settings.js"></script>
+    <script src="js/components/orden.js"></script>
+    <script src="js/components/activityLog.js"></script>
+    <script src="js/components/comments.js"></script>
+    <script src="js/components/sortable.js"></script>
+    <script src="js/components/selection.js"></script>
+    <script src="js/components/pagination.js"></script>
+    <script src="js/components/layout.js"></script>
+    <script src="js/components/crudPage.js"></script>
+
+    <!--
+        Los formularios de las entidades que cuelgan de una
+        empresa: desde su ficha se da de alta un contacto, un
+        presupuesto o una cita, y para eso hace falta el
+        formulario de cada módulo.
+
+        Es el mismo formulario y no una copia. Con una copia
+        habría dos sitios donde se define qué campos tiene un
+        contacto, y sólo uno se acordaría de los cambios.
+    -->
+
+    <script src="js/contacts/contactForm.js"></script>
+    <script src="js/quotes/quoteForm.js"></script>
+    <script src="js/agenda/appointmentForm.js"></script>
+
+    <script src="js/companies/companyDetail.js"></script>
+    <script src="js/companies/companyUI.js"></script>
+    <script src="js/companies/companyForm.js"></script>
+    <script src="js/companies/app.js"></script>
+
+</body>
+
+</html>

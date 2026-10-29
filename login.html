@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Acceso · CRM Laboratory</title>
+
+    <link rel="stylesheet" href="css/marca.css">
+    <link rel="stylesheet" href="css/crm.css">
+    <link rel="stylesheet" href="css/login.css">
+
+    <script src="js/entorno.js"></script>
+    <script src="js/tema.js"></script>
+
+</head>
+
+<body class="pantallaAcceso">
+
+    <main class="tarjetaAcceso">
+
+        <div class="marcaAcceso">
+
+            <span class="marcaSimbolo" aria-hidden="true">CL</span>
+
+            <span class="marcaNombre">CRM Laboratory</span>
+
+        </div>
+
+        <h1>Identifícate</h1>
+
+        <p class="ayuda">
+            Esta aplicación no enseña nada sin identificarse.
+        </p>
+
+        <form id="loginForm" autocomplete="on">
+
+            <label for="username">
+                Usuario
+            </label>
+
+            <input
+                id="username"
+                name="username"
+                type="text"
+                autocomplete="username"
+                autofocus
+                required>
+
+            <label for="password">
+                Contraseña
+            </label>
+
+            <input
+                id="password"
+                name="password"
+                type="password"
+                autocomplete="current-password"
+                required>
+
+            <button
+                id="loginButton"
+                class="btn-primary"
+                type="submit">
+                Entrar
+            </button>
+
+            <p id="loginError" class="loginError" role="alert"></p>
+
+        </form>
+
+        <!--
+        | Las credenciales están escritas aquí a la vista porque
+        | esto es un banco de pruebas, no una aplicación real.
+        | Quien explore la aplicación tiene que poder entrar sin
+        | preguntarle a nadie.
+        -->
+
+        <p class="ayuda pie">
+            Es un laboratorio: se entra con el usuario de cualquiera
+            de la lista de Usuarios y la contraseña
+            <code>crm-2026</code>. Por ejemplo <code>ruben</code>,
+            que es administrador, o <code>lucia</code>, que sólo
+            puede mirar.
+        </p>
+
+    </main>
+
+    <script src="js/users/userRepository.js"></script>
+    <script src="js/roles/roleRepository.js"></script>
+    <script src="js/components/session.js"></script>
+    <script src="js/components/permissions.js"></script>
+
+    <script src="js/login.js"></script>
+
+</body>
+
+</html>

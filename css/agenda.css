@@ -1,0 +1,152 @@
+/*
+|--------------------------------------------------------------------------
+| Agenda
+|--------------------------------------------------------------------------
+|
+| Lo propio de esta pantalla: el calendario. El resto —tabla,
+| botones, diálogo— lo comparte con las demás.
+|
+*/
+
+.calendar-header {
+
+    display:flex;
+    align-items:center;
+    gap:12px;
+
+    margin-bottom:16px;
+
+}
+
+.calendar-header h2 {
+
+    flex:1;
+    margin:0;
+    font-size:18px;
+    text-transform:capitalize;
+
+}
+
+.calendar-grid {
+
+    display:grid;
+    grid-template-columns:repeat(7, 1fr);
+    gap:1px;
+
+    background:var(--linea);
+    border:1px solid var(--linea);
+    border-radius:var(--radio);
+    overflow:hidden;
+    box-shadow:var(--sombra);
+
+}
+
+.calendar-weekday {
+
+    background:var(--superficie-hundida);
+    color:var(--texto-suave);
+
+    padding:9px;
+
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    text-align:center;
+
+}
+
+.calendar-day {
+
+    background:var(--superficie);
+    min-height:96px;
+    padding:8px;
+
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+
+    cursor:pointer;
+
+}
+
+.calendar-day:hover {
+
+    background:var(--superficie-hundida);
+
+}
+
+.calendar-day.empty {
+
+    background:var(--fondo);
+    cursor:default;
+
+}
+
+/*
+| El día de hoy se marca con el número en naranja. Es la única
+| cosa de esta pantalla que se pinta con el color de marca: si se
+| usara también para las citas, dejaría de significar "hoy".
+*/
+
+.calendar-day.today .calendar-number {
+
+    background:var(--marca);
+    color:var(--sobre-marca);
+    border-radius:50%;
+
+}
+
+.calendar-number {
+
+    width:26px;
+    height:26px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:13px;
+    font-weight:600;
+    color:var(--texto-suave);
+
+}
+
+.calendar-event {
+
+    display:block;
+
+    color:var(--enlace);
+    text-decoration:none;
+
+    background:var(--enlace-suave);
+    border-left:3px solid var(--enlace);
+    border-radius:4px;
+
+    padding:3px 6px;
+
+    font-size:12px;
+    line-height:1.3;
+
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+
+}
+
+.calendar-event.realizada {
+
+    background:var(--correcto-suave);
+    border-left-color:var(--correcto);
+    color:var(--correcto);
+
+}
+
+.calendar-event.cancelada {
+
+    background:var(--omitido-suave);
+    border-left-color:var(--omitido);
+    color:var(--omitido);
+    text-decoration:line-through;
+
+}

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Vehículos · CRM Laboratory</title>
+
+    <link rel="stylesheet" href="css/marca.css">
+    <link rel="stylesheet" href="css/crm.css">
+
+    <script src="js/entorno.js"></script>
+    <script src="js/tema.js"></script>
+
+    <!--
+    | El panel a pantalla completa, aquí y no en crm.css: es de esta pantalla
+    | y existe por su pregunta. Fijo, por encima de todo, y el panel ocupa la
+    | ventana entera menos un margen, como el de AUTOSTOCKNUVEX.
+    -->
+
+    <style>
+
+        .capaDePaneles:empty {
+            display: none;
+        }
+
+        .capaDePaneles {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+        }
+
+        .capaFondo {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+        }
+
+        .capaPanel {
+            position: absolute;
+            inset: 24px;
+            display: flex;
+        }
+
+        .toolbar-left {
+            position: relative;
+        }
+
+        .menuAlta {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            z-index: 20;
+            display: flex;
+            flex-direction: column;
+            min-width: 180px;
+            margin-top: 4px;
+            padding: 4px;
+            background: var(--superficie, #fff);
+            border: 1px solid var(--linea, #ddd);
+            border-radius: 8px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+        }
+
+        .menuAlta[hidden] {
+            display: none;
+        }
+
+        .menuAlta button {
+            text-align: left;
+            background: none;
+            border: 0;
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+
+        .desplegablePropio {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            padding: 8px;
+            border-bottom: 1px solid var(--linea-fuerte, #999);
+            cursor: pointer;
+        }
+
+        .desplegableValor {
+            color: var(--texto-suave, #666);
+        }
+
+        .desplegableLista {
+            list-style: none;
+            margin: 0;
+            padding: 4px;
+            background: var(--superficie, #fff);
+            border: 1px solid var(--linea, #ddd);
+            border-radius: 8px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+        }
+
+        .desplegableLista li {
+            padding: 6px 10px;
+            cursor: pointer;
+        }
+
+        .panelCompleto {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            background: var(--superficie, #fff);
+            border-radius: 12px;
+            padding: 24px 32px;
+            overflow: auto;
+        }
+
+        .panelCabecera {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .panelCruz {
+            font-size: 24px;
+            background: none;
+            border: 0;
+            cursor: pointer;
+        }
+
+    </style>
+
+</head>
+
+<body data-modulo="vehiculos">
+
+<a class="saltar" href="#contenido">
+    Saltar al contenido
+</a>
+
+<div class="disposicion">
+
+    <aside class="lateral" id="lateral"></aside>
+
+    <main class="principal" id="contenido">
+
+<!--
+    Los vehículos de la flota.
+
+    Esta pantalla existe por una sola razón: **su alta no se abre en un
+    diálogo, se abre en un panel a pantalla completa** que no se anuncia como
+    tal. Ni `dialog`, ni `role="dialog"`, ni `aria-modal`, ni ninguna clase que
+    diga modal: un contenedor propio colgado al final del documento, un fondo
+    y un elemento con nombre de componente —`lab-vehiculo-nuevo`—.
+
+    De dónde sale
+
+      De AUTOSTOCKNUVEX, el 5 de octubre de 2026. Su "Nuevo vehículo" abre
+      un `asn-vehicle-preview class="full-modal"` dentro del contenedor de
+      paneles del CDK de Angular. El Discovery pulsaba el botón, esperaba
+      cinco segundos a algo que se llamara como un diálogo, no lo veía y se
+      rendía: la pantalla de vehículos se quedaba sin su alta, y con ella
+      todo lo que cuelga de tener un formulario —crear, validar, cancelar,
+      cada obligatorio por separado—. En la ficha de un vehículo pasaba algo
+      peor: el panel se quedaba abierto y tapaba los botones de debajo.
+
+    Qué pregunta
+
+      Si la plataforma reconoce un formulario que se abre por encima **por
+      lo que hace** —aparece al pulsar, tapa la pantalla y tiene campos— y
+      no por cómo se llama su contenedor. Si no lo reconoce, esta pantalla
+      se queda sin sus pruebas de alta y se ve contando.
+
+    Y la segunda pregunta, del mismo sitio
+
+      El alta va por pasos, y "Siguiente" está apagado hasta que la
+      matrícula y la marca están puestas. Es lo que hacen las altas de
+      Piezas, Artículos, Servicios y Proveedores de AUTOSTOCKNUVEX, y lo
+      confirmó Rubén el 6 de octubre de 2026. El asistente que comparten
+      las demás pantallas del laboratorio tiene "Siguiente" siempre activo
+      y valida al pulsarlo, así que esto no se veía: el Discovery pulsaba
+      un botón apagado y perdía el alta entera. Va aquí y no en el
+      asistente compartido para no mover las pruebas de cinco pantallas.
+
+    Lo que NO se ha hecho a propósito
+
+      Ponerle `role="dialog"` al panel. Sería lo correcto para quien navega
+      con lector de pantalla, y es lo que habría que pedirle a la aplicación
+      de verdad; aquí haría desaparecer la pregunta, porque el panel se
+      reconocería por su papel y no por lo que hace. La regla de esta casa:
+      se reconoce por lo que algo hace, no por cómo se llama.
+-->
+
+<div id="vistaListado">
+
+    <h1>Vehículos</h1>
+
+    <section id="panelListado">
+
+        <div class="toolbar">
+
+            <div class="toolbar-left">
+
+                <button id="btnNuevoVehiculo" class="primario">
+                    Nuevo vehículo
+                </button>
+
+            </div>
+
+            <input
+                id="search"
+                type="text"
+                placeholder="Buscar por matrícula, marca o modelo...">
+
+        </div>
+
+        <table id="vehiculosGrid">
+
+            <thead>
+
+                <tr>
+
+                    <th>Matrícula</th>
+                    <th>Código de flota</th>
+                    <th>Marca</th>
+                    <th>Modelo</th>
+                    <th>Matriculación</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            </tbody>
+
+        </table>
+
+        <p
+            id="vehiculosVacio"
+            class="aviso"
+            role="status">
+        </p>
+
+        <div id="paginacion"></div>
+
+    </section>
+
+</div>
+
+    </main>
+
+</div>
+
+    <script src="js/components/badge.js"></script>
+    <script src="js/components/toast.js"></script>
+    <script src="js/components/confirm.js"></script>
+    <script src="js/components/modal.js"></script>
+    <script src="js/components/navigation.js"></script>
+    <script src="js/components/session.js"></script>
+    <script src="js/components/permissions.js"></script>
+    <script src="js/components/activityLog.js"></script>
+    <script src="js/components/pagination.js"></script>
+    <script src="js/components/layout.js"></script>
+
+    <script src="js/vehiculos/vehiculoRepository.js"></script>
+    <script src="js/vehiculos/app.js"></script>
+
+</body>
+
+</html>

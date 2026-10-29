@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Usuarios · CRM Laboratory</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="css/marca.css">
+    <link rel="stylesheet" href="css/crm.css">
+
+    <!--
+    | El tema se fija antes de pintar nada, para que la página no
+    | aparezca un instante en claro antes de ponerse oscura.
+    -->
+
+    <script src="js/entorno.js"></script>
+    <script src="js/tema.js"></script>
+
+</head>
+
+<body data-modulo="users">
+
+<a class="saltar" href="#contenido">
+    Saltar al contenido
+</a>
+
+<div class="disposicion">
+
+    <aside class="lateral" id="lateral"></aside>
+
+    <main class="principal" id="contenido">
+
+<div id="vistaListado">
+
+
+    <h1>Usuarios</h1>
+
+
+    <section id="panelListado">
+
+        <div class="toolbar">
+
+            <button
+                id="newUserButton"
+                class="btn-primary">
+                Nuevo usuario
+            </button>
+
+            <input
+                id="search"
+                type="text"
+                placeholder="Buscar usuario...">
+
+        </div>
+
+        <table id="usersGrid">
+
+            <thead>
+
+                <tr>
+
+
+                    <th class="columna-seleccion">
+                        <input
+                            type="checkbox"
+                            id="seleccionTodo"
+                            aria-label="Seleccionar todo lo que se ve">
+                    </th>
+                    <th>Usuario</th>
+                    <th>Email</th>
+                    <th>Rol</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            </tbody>
+
+        </table>
+
+        <div class="seleccion-barra">
+
+            <span id="seleccionEstado" role="status"></span>
+
+            <button
+                id="borrarSeleccionButton"
+                class="btn-delete"
+                type="button"
+                disabled>
+                🗑 Eliminar seleccionados
+            </button>
+
+        </div>
+
+
+        <div id="paginacion"></div>
+
+    </section>
+
+
+    </div>
+
+<!-- LA FICHA -->
+
+<div id="vistaFicha" hidden>
+
+    <nav class="migas">
+
+        <a
+            id="fichaVolver"
+            class="btn-volver"
+            href="users.html">
+            ← Usuarios
+        </a>
+
+    </nav>
+
+    <h1 id="fichaTitulo"></h1>
+
+    <p
+        id="fichaNoExiste"
+        class="aviso error"
+        role="status"
+        hidden>
+    </p>
+
+    <nav
+        class="pestanas"
+        role="tablist"
+        aria-label="Secciones de la ficha">
+
+        <button
+            id="fichaTabDatos"
+            type="button"
+            role="tab"
+            aria-controls="fichaPanelDatos"
+            aria-selected="true">
+            Datos
+        </button>
+
+        <button
+            id="tabDocumentacion"
+            type="button"
+            role="tab"
+            aria-controls="panelDocumentacion"
+            aria-selected="false">
+            Documentación
+        </button>
+
+        <button
+            id="tabComentarios"
+            type="button"
+            role="tab"
+            aria-controls="panelComentarios"
+            aria-selected="false">
+            Comentarios
+        </button>
+
+    </nav>
+
+    <section
+        id="fichaPanelDatos"
+        role="tabpanel"
+        aria-labelledby="fichaTabDatos">
+
+
+    <div class="toolbar">
+
+        <button
+            id="fichaEditarButton"
+            class="btn-primary"
+            type="button"
+            hidden>
+            Editar
+        </button>
+
+    </div>
+
+        <dl id="fichaDatos" class="datos"></dl>
+
+    </section>
+
+
+    <section
+        id="panelDocumentacion"
+        role="tabpanel"
+        aria-labelledby="tabDocumentacion"
+        hidden>
+
+        <div class="toolbar">
+
+            <div class="subida">
+
+                <label for="documentFile">
+                    Fichero
+                </label>
+
+                <!--
+                | Qué tipos admite, declarado donde una máquina puede
+                | leerlo.
+                |
+                | `accept` no impide nada: es una ayuda para el cuadro de
+                | elegir fichero, y cualquiera que arrastre uno o use una
+                | herramienta se lo salta. Por eso la comprobación de verdad
+                | está en el código que sube — las dos cosas hacen falta, y
+                | tener sólo la primera es el fallo que la plataforma viene a
+                | cazar.
+                -->
+
+                <input
+                    id="documentFile"
+                    type="file"
+                    accept=".pdf,.png,.jpg,.jpeg,.txt">
+
+                <button
+                    id="uploadDocumentButton"
+                    class="btn-primary"
+                    type="button">
+                    Subir documento
+                </button>
+
+            </div>
+
+        </div>
+
+        <p
+            id="documentAviso"
+            class="aviso"
+            role="status">
+        </p>
+
+        <table id="documentsGrid">
+
+            <thead>
+
+                <tr>
+
+                    <th class="columna-tirador"><span class="soloLectores">Orden</span></th>
+
+                    <th>Documento</th>
+                    <th>Tipo</th>
+                    <th>Tamaño</th>
+                    <th>Subido</th>
+                    <th>Acciones</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            </tbody>
+
+        </table>
+
+    </section>
+
+    <section
+        id="panelComentarios"
+        role="tabpanel"
+        aria-labelledby="tabComentarios"
+        hidden>
+
+        <div class="comentario-nuevo">
+
+            <textarea
+                id="commentText"
+                rows="6"
+                aria-label="Comentario"
+                placeholder="Escribe un comentario..."></textarea>
+
+            <button
+                id="addCommentButton"
+                class="btn-primary"
+                type="button">
+                Comentar
+            </button>
+
+        </div>
+
+        <p
+            id="commentAviso"
+            class="aviso"
+            role="status">
+        </p>
+
+        <div class="toolbar">
+
+            <input
+                id="commentFilter"
+                type="text"
+                placeholder="Filtrar comentarios...">
+
+            <label for="commentOrder">
+                Ordenar por
+            </label>
+
+            <select id="commentOrder">
+                <option value="puestos">Como están puestos</option>
+                <option value="fecha">Fecha</option>
+                <option value="usuario">Usuario</option>
+            </select>
+
+            <label for="commentDirection">
+                Sentido
+            </label>
+
+            <select id="commentDirection">
+                <option value="asc">Ascendente</option>
+                <option value="desc">Descendente</option>
+            </select>
+
+        </div>
+
+        <p
+            id="commentsMoverNota"
+            class="aviso"
+            role="status"
+            hidden>
+            Con un orden puesto los comentarios no se pueden mover.
+            Vuelve a "Como están puestos" para colocarlos a mano.
+        </p>
+
+        <ul
+            id="commentsList"
+            class="comentarios">
+        </ul>
+
+        <p
+            id="commentsVacio"
+            class="aviso"
+            role="status">
+        </p>
+
+    </section>
+
+</div>
+
+    <div id="modalContainer"></div>
+
+    </main>
+
+</div>
+
+    <script src="js/users/userRepository.js"></script>
+    <script src="js/roles/roleRepository.js"></script>
+
+    <script src="js/components/toast.js"></script>
+    <script src="js/components/confirm.js"></script>
+    <script src="js/components/dataTable.js"></script>
+    <script src="js/components/badge.js"></script>
+    <script src="js/components/modal.js"></script>
+    <script src="js/components/navigation.js"></script>
+    <script src="js/components/tabs.js"></script>
+    <script src="js/components/detail.js"></script>
+    <script src="js/components/relations.js"></script>
+    <script src="js/components/relatedTable.js"></script>
+    <script src="js/components/wizard.js"></script>
+    <script src="js/components/documents.js"></script>
+    <script src="js/components/session.js"></script>
+    <script src="js/components/permissions.js"></script>
+    <script src="js/components/settings.js"></script>
+    <script src="js/components/orden.js"></script>
+    <script src="js/components/activityLog.js"></script>
+    <script src="js/components/comments.js"></script>
+    <script src="js/components/sortable.js"></script>
+    <script src="js/components/selection.js"></script>
+    <script src="js/components/pagination.js"></script>
+    <script src="js/components/layout.js"></script>
+    <script src="js/components/crudPage.js"></script>
+
+    <script src="js/users/userUI.js"></script>
+    <script src="js/users/userForm.js"></script>
+    <script src="js/users/userDetail.js"></script>
+    <script src="js/users/app.js"></script>
+
+</body>
+
+</html>

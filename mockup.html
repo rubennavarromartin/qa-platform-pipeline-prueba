@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mockup · CRM Laboratory</title>
+
+    <link rel="stylesheet" href="css/marca.css">
+    <link rel="stylesheet" href="css/crm.css">
+
+    <script src="js/entorno.js"></script>
+    <script src="js/tema.js"></script>
+
+</head>
+
+<body data-modulo="mockup">
+
+<a class="saltar" href="#contenido">
+    Saltar al contenido
+</a>
+
+<div class="disposicion">
+
+    <aside class="lateral" id="lateral"></aside>
+
+    <main class="principal" id="contenido">
+
+<!--
+|==============================================================================
+| El mockup: una pantalla hecha mal a propósito
+|==============================================================================
+|
+| Esto no es una pantalla del CRM. Es un **banco de pruebas del Discovery**:
+| una pantalla que se parece a las demás y que está mal hecha en siete sitios
+| distintos, cada uno un fallo que se ve en aplicaciones de verdad todas las
+| semanas.
+|
+| Para qué
+|
+|   El laboratorio existe para plantearle preguntas a la plataforma, y hasta
+|   ahora todas sus pantallas estaban **bien** hechas: la pregunta era si la
+|   plataforma sabía leerlas. Ésta pregunta lo contrario — si sabe **darse
+|   cuenta de que algo está mal**, y decirlo en lugar de callarlo o de leer
+|   cualquier cosa.
+|
+|   Los fallos son evidentes a propósito. No se trata de esconderlos: se
+|   trata de tener un sitio donde comprobar, en cada Build, que la plataforma
+|   los sigue viendo.
+|
+| Cómo se lee esto
+|
+|   Cada fallo va marcado con FALLO N y dice tres cosas: qué está mal, qué
+|   debería hacer la plataforma, y si hoy lo hace. Ese último dato es el que
+|   hay que ir actualizando: es la lista de lo que sabe ver y lo que no.
+|
+| Cómo va, a 4 de septiembre de 2026
+|
+|   **Siete de siete**, desde esta misma tarde. Los dos que faltaban por la
+|   mañana eran el 1 y el 2, y los dos se cerraron a la vez:
+|
+|     1  un botón sin nombre accesible          ya no se señala con el
+|                                               número catorce de la
+|                                               página, sino acotado a su
+|                                               contenedor — y se dice que
+|                                               no tiene nombre
+|     2  dos campos con el mismo identificador  se quedan los dos sin
+|                                               selector, y se dice que es
+|                                               de la aplicación
+|
+|   El 2 era el que ya costaba dinero: es el de "Alias" y "Cif" de Bitácora,
+|   dos pruebas en rojo permanente sin que el mensaje dijera por qué.
+|
+|   Y arreglarlos destapó otros dos que nadie había mirado nunca, los dos en
+|   el propio laboratorio: dieciséis botones que compartían selector de dos
+|   en dos, y el `nth` de los homónimos mal contado. Está en el CHANGELOG.
+|
+|   Y por el camino el mockup encontró uno que sí se arregló: `filasALaVista`
+|   contaba las filas escondidas, así que una aplicación que filtre
+|   escondiéndolas —en vez de quitándolas del documento— parecía no filtrar.
+|   Aquí decía a la vez "no dice nada al quedarse vacía" y "deja 3 filas", y
+|   las tres estaban escondidas.
+|
+| Y una advertencia sobre lo que se lee aquí
+|
+|   Que un fallo salga en verde en esta pantalla no quiere decir que la
+|   plataforma lo resuelva siempre: quiere decir que lo resuelve **en este
+|   caso**, que está montado a mano y es el más fácil de los posibles. Un
+|   verde aquí es una regresión menos, no una garantía.
+|
+| Y una advertencia que no conviene olvidar
+|
+|   Esta pantalla se explora como las demás, así que **sale en las cifras del
+|   laboratorio y puede generar pruebas que fallen siempre**. Eso no es un
+|   descuido: es el precio de tener el caso montado. Las pruebas que salgan
+|   en rojo permanente se apagan desde el dashboard, y lo que importa es lo
+|   que diga el Discovery al leerla.
+|
+-->
+
+<div id="vistaListado">
+
+    <h1>Mockup</h1>
+
+    <p class="ayuda">
+        Una pantalla hecha mal a propósito, para comprobar que la plataforma
+        se da cuenta. Cada fallo está explicado en el código.
+    </p>
+
+    <!--
+    |--------------------------------------------------------------------------
+    | FALLO 1 · Un botón sin nombre accesible
+    |--------------------------------------------------------------------------
+    |
+    | Qué está mal        Un botón cuyo contenido es un icono y nada más. No
+    |                     tiene texto, ni `aria-label`, ni `title`. Para
+    |                     cualquiera que no lo vea, no existe.
+    |
+    | Qué debería pasar   La plataforma no puede darle un selector por papel y
+    |                     nombre, porque no tiene nombre. Debería dejarlo
+    |                     **sin selector** y decirlo, en lugar de inventarse
+    |                     uno por su posición.
+    |
+    | Hoy                 **No lo hace**, medido el 4 de septiembre de 2026:
+    |                     le pone `button >> nth=14`, un selector **por su
+    |                     posición**. Se rompe en cuanto alguien añada un
+    |                     botón por encima, y no se romperá diciendo que el
+    |                     botón no tiene nombre: dirá que no encuentra el
+    |                     elemento, o peor, pulsará otro.
+    |
+    |                     Y contradice lo que la plataforma dice de sí
+    |                     misma: *"un control se señala por lo que es, no
+    |                     por dónde está"*. Lo que hay escrito —que lo que
+    |                     no tiene nada se queda sin selector— es de
+    |                     `SelectoresFirmes`, que revisa los selectores por
+    |                     papel y nombre; a uno por posición no lo mira
+    |                     nadie.
+    |
+    | Cómo se planteó bien
+    |
+    |   Costó dos intentos. La primera versión del botón llevaba un
+    |   `id="botonSinNombre"`, así que la plataforma lo señalaba por ahí y
+    |   esto **no probaba nada**: un identificador es un selector
+    |   perfectamente válido. La segunda tenía el icono suelto —`🔧`— y
+    |   tampoco: el emoji **es** el nombre accesible, así que salía
+    |   `role=button[name="🔧"]`, que es correcto.
+    |
+    |   La pregunta sólo queda planteada con el icono en un `aria-hidden`,
+    |   que es como está escrito en cualquier aplicación que use una fuente
+    |   de iconos o un `<svg>`. Y es el caso de Bitácora.
+    -->
+
+    <div class="acciones">
+
+        <button type="button">
+            <span aria-hidden="true">🔧</span>
+        </button>
+
+        <!--
+        |----------------------------------------------------------------------
+        | FALLO 2 · Dos campos con el mismo identificador
+        |----------------------------------------------------------------------
+        |
+        | Qué está mal        `#dato` aparece dos veces en la misma pantalla.
+        |                     Es HTML inválido, y aun así los navegadores lo
+        |                     aceptan sin rechistar.
+        |
+        | Qué debería pasar   Ningún selector por identificador puede
+        |                     distinguirlos: `#dato` devuelve siempre el
+        |                     primero. La plataforma debería verlo y no
+        |                     escribir pruebas que crean estar tocando el
+        |                     segundo.
+        |
+        | Hoy                 **No lo detecta**, medido en el Build del 4 de
+        |                     septiembre de 2026: los ve como dos campos, y
+        |                     a los dos les pone el mismo selector `#dato`.
+        |
+        |                     Es el mismo caso que Bitácora, donde "Alias" y
+        |                     "Cif" comparten `id` en el mismo diálogo y dos
+        |                     pruebas salen en rojo sin que se sepa por qué.
+        |                     Está apuntado en el ROADMAP, y **éste es el
+        |                     único de los siete que sigue sin verse**: el
+        |                     sitio donde comprobarlo el día que se haga.
+        -->
+
+        <label for="dato">Primero</label>
+        <input id="dato" type="text" value="uno">
+
+        <label for="dato">Segundo</label>
+        <input id="dato" type="text" value="dos">
+
+    </div>
+
+    <!--
+    |--------------------------------------------------------------------------
+    | FALLO 3 · Un identificador que no vale como selector
+    |--------------------------------------------------------------------------
+    |
+    | Qué está mal        Un `id` que empieza por un número. Es válido en
+    |                     HTML5 y **no** es un selector CSS válido:
+    |                     `#3-campo` hace reventar a `querySelectorAll`.
+    |
+    | Qué debería pasar   Señalarlo de otra manera —por su papel y su
+    |                     nombre— en lugar de escribir la almohadilla a mano
+    |                     y romperse.
+    |
+    | Hoy                 Lo hace, y aquí se ha visto: en el Build del 4 de
+    |                     septiembre lo señala con `[id="3-campo"]`, que es
+    |                     la forma que no revienta.
+    |
+    |                     `window.selectorPorId` y `shared/SelectorDeId.js`
+    |                     deciden cuándo un identificador no vale. Se midió
+    |                     con nueve identificadores contra un documento
+    |                     real: cuatro hacían reventar y seis no daban con
+    |                     su elemento.
+    -->
+
+    <label for="3-campo">Campo con identificador raro</label>
+    <input id="3-campo" type="text">
+
+    <!--
+    |--------------------------------------------------------------------------
+    | FALLO 4 · Una etiqueta que no apunta a ningún campo
+    |--------------------------------------------------------------------------
+    |
+    | Qué está mal        El `for` de la etiqueta apunta a un identificador
+    |                     que no existe en la pantalla.
+    |
+    | Qué debería pasar   El campo se queda sin nombre, y la plataforma
+    |                     debería decir que no sabe cómo se llama en lugar de
+    |                     ponerle el texto de la etiqueta más cercana — que
+    |                     es de otro campo.
+    |
+    | Hoy                 **Lo hace**, comprobado en el Build del 4 de
+    |                     septiembre: el campo sale sin nombre, y no con el
+    |                     de la etiqueta huérfana que tiene justo encima.
+    |
+    |                     `etiquetaDeCampo` mira el `for`, el `aria-label`,
+    |                     el `placeholder` y el envoltorio; aquí no hay
+    |                     ninguno de los cuatro.
+    -->
+
+    <label for="campoQueNoExiste">Huérfana</label>
+    <input id="campoDeVerdad" type="text">
+
+    <!--
+    |--------------------------------------------------------------------------
+    | FALLO 5 · Un obligatorio que no se exige
+    |--------------------------------------------------------------------------
+    |
+    | Qué está mal        El campo se declara obligatorio —`aria-required`— y
+    |                     el formulario se guarda sin él. Lo dice y no lo
+    |                     cumple.
+    |
+    | Qué debería pasar   La clase `OBLIGATORIO` tiene que salir en rojo
+    |                     diciendo qué campo se guardó sin estar.
+    |
+    | Hoy                 Lo hace, desde el 3 de septiembre. El Discovery
+    |                     lo lee como obligatorio —`req=true`— aunque lo
+    |                     único que lo diga sea el `aria-required`, que es
+    |                     el primer paso: sin verlo obligatorio no se
+    |                     planifica la prueba que lo caza.
+    |
+    |                     Y el caso está montado sin trampa: el botón de
+    |                     guardar no comprueba nada.
+    -->
+
+    <form id="formularioDelMockup">
+
+        <label for="obligatorioDeMentira">
+            Obligatorio de mentira *
+        </label>
+        <input
+            id="obligatorioDeMentira"
+            type="text"
+            aria-required="true">
+
+        <button id="guardarMockup" type="button">Guardar</button>
+
+        <p class="status" id="loQuePasa" role="status"></p>
+
+    </form>
+
+    <!--
+    |--------------------------------------------------------------------------
+    | FALLOS 6 y 7 · Una tabla sin cabeceras que se queda vacía sin decirlo
+    |--------------------------------------------------------------------------
+    |
+    | Dos fallos en la misma tabla, y están juntos porque separarlos era el
+    | error.
+    |
+    | Qué está mal        Dos cosas. La tabla no tiene `<thead>` ni `<th>`:
+    |                     la primera fila hace de cabecera sólo por estar
+    |                     arriba y en negrita. Y al buscar algo que no
+    |                     existe se queda en blanco sin decir por qué —
+    |                     quien la mira no sabe si es que no hay datos o si
+    |                     algo ha reventado.
+    |
+    | Qué debería pasar   Que la plataforma diga que **no sabe** cómo se
+    |                     llaman las columnas, en lugar de dar por columna
+    |                     el contenido de la primera fila, que es un
+    |                     registro. Y que **anote** que esta pantalla no
+    |                     dice nada al quedarse vacía, en lugar de dar por
+    |                     buena una tabla en blanco.
+    |
+    | Hoy                 Las dos, comprobadas en el Build del 4 de
+    |                     septiembre: `columnas: []` —no toma la primera
+    |                     fila por cabecera— y `comoLoDice: "no lo dice"`.
+    |
+    | Por qué una sola tabla
+    |
+    |   Porque con dos, este caso no estaba planteado. La primera versión
+    |   tenía una tabla sin cabecera y otra distinta, con cabecera, que era
+    |   la que filtraba el buscador. El Discovery eligió como rejilla de la
+    |   pantalla la primera —la sin cabecera— y el buscador filtraba la
+    |   segunda, así que al buscar algo que no existe la rejilla elegida
+    |   **seguía teniendo sus tres filas**: `sin resultados` devolvía
+    |   `filas: 3` y no cero.
+    |
+    |   No era un fallo de la plataforma: era un fallo del mockup. Una
+    |   pantalla de prueba con dos tablas donde el buscador filtra la que no
+    |   es no plantea la pregunta que dice plantear — y de las dos, la que
+    |   contestaba mal era la pregunta, no la respuesta.
+    -->
+
+    <label for="buscadorMudo">Buscar</label>
+    <input id="buscadorMudo" type="search" placeholder="Buscar en la tabla...">
+
+    <table id="tablaMuda">
+
+        <tbody id="cuerpoMudo">
+
+            <tr>
+                <td><strong>Empresa</strong></td>
+                <td><strong>Ciudad</strong></td>
+            </tr>
+
+            <tr>
+                <td>Bosonit</td>
+                <td>Logroño</td>
+            </tr>
+
+            <tr>
+                <td>Babel</td>
+                <td>Madrid</td>
+            </tr>
+
+        </tbody>
+
+    </table>
+
+</div>
+
+    <div id="modalContainer"></div>
+
+    </main>
+
+</div>
+
+    <script src="js/users/userRepository.js"></script>
+    <script src="js/roles/roleRepository.js"></script>
+
+    <script src="js/components/toast.js"></script>
+    <script src="js/components/navigation.js"></script>
+    <script src="js/components/session.js"></script>
+    <script src="js/components/permissions.js"></script>
+    <script src="js/components/layout.js"></script>
+
+    <script src="js/mockup/app.js"></script>
+
+</body>
+
+</html>

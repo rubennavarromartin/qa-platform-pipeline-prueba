@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Proyectos · CRM Laboratory</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="css/marca.css">
+    <link rel="stylesheet" href="css/crm.css">
+    <link rel="stylesheet" href="css/proyectos.css">
+
+    <script src="js/entorno.js"></script>
+    <script src="js/tema.js"></script>
+
+</head>
+
+<body data-modulo="projects">
+
+<a class="saltar" href="#contenido">
+    Saltar al contenido
+</a>
+
+<div class="disposicion">
+
+    <aside class="lateral" id="lateral"></aside>
+
+    <main class="principal" id="contenido">
+
+<!--
+| El listado
+-->
+
+<div id="vistaListado">
+
+    <h1>Proyectos</h1>
+
+    <section id="panelListado">
+
+        <div class="toolbar">
+
+            <button
+                id="newProjectButton"
+                class="btn-primary">
+                Nuevo proyecto
+            </button>
+
+            <input
+                id="search"
+                type="text"
+                placeholder="Buscar proyecto...">
+
+        </div>
+
+        <table id="projectsGrid">
+
+            <thead>
+
+                <tr>
+
+                    <th>Proyecto</th>
+                    <th>Empresa</th>
+                    <th>Estado</th>
+                    <th>Entrega</th>
+                    <th>Avance</th>
+                    <th>Acciones</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            </tbody>
+
+        </table>
+
+    </section>
+
+</div>
+
+<!--
+| La ficha de un proyecto.
+|
+| No son pestañas: es un **menú lateral propio de la pantalla**, con las
+| secciones del proyecto. Se ha montado así a propósito, porque es un caso
+| que el laboratorio no planteaba — una pantalla con dos menús, el de la
+| aplicación a la izquierda del todo y el del proyecto dentro. Lo que se
+| pulsa aquí no navega: cambia el panel de al lado.
+|
+| Y declara lo que es: `nav` con `aria-current` en la sección abierta. La
+| forma de reconocerlo sin leer el texto está puesta; lo que hay que ver es
+| si la plataforma la usa o se piensa que son pestañas.
+-->
+
+<div id="vistaFicha" hidden>
+
+    <nav class="migas">
+
+        <button
+            id="fichaVolver"
+            type="button"
+            class="miga">
+            ← Proyectos
+        </button>
+
+        <span id="fichaMigaNombre" class="miga-actual"></span>
+
+    </nav>
+
+    <p id="fichaNoExiste" hidden>
+        Ese proyecto no existe.
+    </p>
+
+    <div id="fichaProyecto" class="proyecto">
+
+        <!--
+        | El menú del proyecto
+        -->
+
+        <nav class="proyecto-menu" id="proyectoMenu" aria-label="Secciones del proyecto">
+
+            <div class="proyecto-menu-cabecera">
+
+                <span class="proyecto-menu-etiqueta">Proyecto activo</span>
+
+                <strong id="proyectoMenuNombre"></strong>
+
+            </div>
+
+            <button
+                type="button"
+                class="proyecto-seccion"
+                data-seccion="resumen"
+                aria-current="page">
+                ▤ Resumen
+            </button>
+
+            <button
+                type="button"
+                class="proyecto-seccion"
+                data-seccion="tareas">
+                ✓ Tareas
+            </button>
+
+            <button
+                type="button"
+                class="proyecto-seccion"
+                data-seccion="agenda">
+                ◷ Agenda
+            </button>
+
+            <button
+                type="button"
+                class="proyecto-seccion"
+                data-seccion="equipo">
+                ☺ Equipo
+            </button>
+
+            <button
+                type="button"
+                class="proyecto-seccion"
+                data-seccion="documentacion">
+                ▦ Documentación
+            </button>
+
+        </nav>
+
+        <div class="proyecto-cuerpo">
+
+            <!--
+            | La cabecera, que no cambia al cambiar de sección
+            -->
+
+            <header class="proyecto-cabecera">
+
+                <div>
+
+                    <h1 id="fichaTitulo"></h1>
+
+                    <p id="fichaSubtitulo" class="proyecto-subtitulo"></p>
+
+                </div>
+
+                <button
+                    id="nuevaTareaButton"
+                    class="btn-primary"
+                    type="button">
+                    + Nueva tarea
+                </button>
+
+            </header>
+
+            <!--
+            | Resumen
+            -->
+
+            <section id="seccionResumen" class="proyecto-seccion-panel">
+
+                <!--
+                | Las cifras del proyecto, y **tres de las cuatro son accesos**.
+                |
+                | Cada una lleva a la sección de la que sale su número: el
+                | progreso a Tareas, el equipo a Equipo, los documentos a
+                | Documentación. Es lo que hace cualquier panel de verdad, y
+                | monta un caso que el laboratorio no tenía: **un botón que
+                | declara a dónde lleva sin ser un enlace**.
+                |
+                | Lo declara con `data-href`, que es como navegan las
+                | aplicaciones de una sola página. Eso permite saber que
+                | **navega** sin pulsarlo, que es lo que separa "llévame a
+                | Tareas" de "borra este registro" — y lo que decide si se
+                | puede pulsar en una aplicación de producción.
+                |
+                | **Y "Estado" no es un botón, a propósito.** Con las cuatro
+                | siendo accesos, cualquier respuesta de la plataforma
+                | valdría; con tres que llevan y una que no, hay algo que
+                | distinguir. Es la misma razón por la que cinco listas del
+                | laboratorio no tienen botones de colocar.
+                -->
+
+                <div class="proyecto-cifras">
+
+                    <button
+                        class="tarjeta-cifra tarjeta-cifra-acceso"
+                        data-href="#tareas"
+                        data-seccion="tareas">
+
+                        <span class="tarjeta-cifra-nombre">Progreso del proyecto</span>
+
+                        <strong id="cifraAvance" class="tarjeta-cifra-valor"></strong>
+
+                        <!--
+                        | La barra dice lo mismo que el número de arriba, y el
+                        | número es lo único que se puede comprobar: de un
+                        | dibujo no se lee ningún dato. Lleva su `role` y sus
+                        | valores para que quien no la ve sepa por dónde va.
+                        -->
+
+                        <div
+                            id="barraAvance"
+                            class="barra"
+                            role="progressbar"
+                            aria-valuemin="0"
+                            aria-valuemax="100">
+
+                            <div id="barraAvanceRelleno" class="barra-relleno"></div>
+
+                        </div>
+
+                    </button>
+
+                    <!--
+                    | Ésta no lleva a ninguna parte, y es el caso contrario
+                    | que hace falta para poder distinguir.
+                    -->
+
+                    <article class="tarjeta-cifra">
+
+                        <span class="tarjeta-cifra-nombre">Estado</span>
+
+                        <strong id="cifraEstado" class="tarjeta-cifra-valor"></strong>
+
+                    </article>
+
+                    <button
+                        class="tarjeta-cifra tarjeta-cifra-acceso"
+                        data-href="#equipo"
+                        data-seccion="equipo">
+
+                        <span class="tarjeta-cifra-nombre">Equipo</span>
+
+                        <strong id="cifraEquipo" class="tarjeta-cifra-valor"></strong>
+
+                    </button>
+
+                    <button
+                        class="tarjeta-cifra tarjeta-cifra-acceso"
+                        data-href="#documentacion"
+                        data-seccion="documentacion">
+
+                        <span class="tarjeta-cifra-nombre">Documentación</span>
+
+                        <strong id="cifraDocumentos" class="tarjeta-cifra-valor"></strong>
+
+                    </button>
+
+                </div>
+
+                <div class="proyecto-dos-columnas">
+
+                    <div>
+
+                        <div class="proyecto-subcabecera">
+
+                            <h2>Tareas prioritarias</h2>
+
+                            <span class="proyecto-apunte">Todas las tareas · esta semana</span>
+
+                        </div>
+
+                        <div id="tableroResumen" class="tablero"></div>
+
+                    </div>
+
+                    <aside class="proyecto-panel">
+
+                        <h2>Documentación</h2>
+
+                        <ul id="documentacionResumen" class="lista-documentos"></ul>
+
+                    </aside>
+
+                </div>
+
+                <section class="proyecto-panel">
+
+                    <div class="proyecto-subcabecera">
+
+                        <h2>Próximamente</h2>
+
+                        <span class="proyecto-apunte">Agenda</span>
+
+                    </div>
+
+                    <ul id="proximamente" class="lista-agenda"></ul>
+
+                </section>
+
+            </section>
+
+            <!--
+            | Tareas: el mismo tablero, con todas
+            -->
+
+            <section id="seccionTareas" class="proyecto-seccion-panel" hidden>
+
+                <h2>Tareas</h2>
+
+                <div id="tableroTareas" class="tablero"></div>
+
+            </section>
+
+            <!--
+            | Agenda
+            -->
+
+            <section id="seccionAgenda" class="proyecto-seccion-panel" hidden>
+
+                <h2>Agenda del proyecto</h2>
+
+                <ul id="agendaProyecto" class="lista-agenda"></ul>
+
+            </section>
+
+            <!--
+            | Equipo
+            -->
+
+            <section id="seccionEquipo" class="proyecto-seccion-panel" hidden>
+
+                <h2>Equipo</h2>
+
+                <table id="equipoGrid">
+
+                    <thead>
+
+                        <tr>
+                            <th>Persona</th>
+                            <th>Área</th>
+                            <th>Tareas asignadas</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody></tbody>
+
+                </table>
+
+            </section>
+
+            <!--
+            | Documentación
+            -->
+
+            <section id="seccionDocumentacion" class="proyecto-seccion-panel" hidden>
+
+                <h2>Documentación</h2>
+
+                <ul id="documentacionProyecto" class="lista-documentos"></ul>
+
+            </section>
+
+        </div>
+
+    </div>
+
+</div>
+
+    </main>
+
+</div>
+
+<div id="toasts" class="toasts" aria-live="polite"></div>
+
+    <script src="js/components/toast.js"></script>
+    <script src="js/components/confirm.js"></script>
+    <script src="js/components/dataTable.js"></script>
+    <script src="js/components/badge.js"></script>
+    <script src="js/components/modal.js"></script>
+    <script src="js/components/calendario.js"></script>
+    <script src="js/components/autocomplete.js"></script>
+    <script src="js/components/navigation.js"></script>
+    <script src="js/components/session.js"></script>
+    <script src="js/components/permissions.js"></script>
+    <script src="js/components/activityLog.js"></script>
+    <script src="js/components/crudPage.js"></script>
+    <script src="js/components/pagination.js"></script>
+    <script src="js/components/orden.js"></script>
+    <script src="js/components/sortable.js"></script>
+    <script src="js/components/settings.js"></script>
+    <script src="js/components/relations.js"></script>
+    <script src="js/components/selection.js"></script>
+
+    <script src="js/users/userRepository.js"></script>
+    <script src="js/roles/roleRepository.js"></script>
+    <script src="js/companies/companyRepository.js"></script>
+
+    <script src="js/components/layout.js"></script>
+
+    <script src="js/projects/projectStatuses.js"></script>
+    <script src="js/projects/projects.js"></script>
+    <script src="js/projects/tasks.js"></script>
+    <script src="js/projects/projectUI.js"></script>
+    <script src="js/projects/projectForm.js"></script>
+    <script src="js/projects/taskForm.js"></script>
+    <script src="js/projects/projectDetail.js"></script>
+    <script src="js/projects/app.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,2677 @@
+/*
+|--------------------------------------------------------------------------
+| CRM Laboratory
+|--------------------------------------------------------------------------
+|
+| La hoja común de las siete pantallas: disposición, controles,
+| tablas, fichas y diálogos.
+|
+| Sustituye a contacts.css, que se llamaba así por la primera
+| pantalla que hubo y acabó siendo la hoja de todas. Y sustituye
+| a los colores escritos a mano: aquí no hay ni un `#2563eb` ni
+| un `#1f2937`, todo sale de las variables de marca.css. Eso es
+| lo que hace que el tema oscuro sea una lista de variables
+| redefinidas y no una segunda hoja de estilos.
+|
+| Lo propio de cada pantalla —el calendario, el kanban, las
+| líneas de un presupuesto— sigue en su hoja.
+|
+*/
+
+*, *::before, *::after {
+
+    box-sizing:border-box;
+
+}
+
+html {
+
+    color-scheme:light;
+
+}
+
+@media (prefers-color-scheme: dark) {
+
+    html:not([data-tema="claro"]) {
+
+        color-scheme:dark;
+
+    }
+
+}
+
+html[data-tema="oscuro"] {
+
+    color-scheme:dark;
+
+}
+
+body {
+
+    margin:0;
+
+    font-family:var(--tipografia);
+    font-size:15px;
+    line-height:1.5;
+
+    background:var(--fondo);
+    color:var(--texto);
+
+    -webkit-font-smoothing:antialiased;
+
+}
+
+h1, h2, h3 {
+
+    color:var(--tinta);
+    letter-spacing:-.01em;
+    margin-top:0;
+
+}
+
+h1 {
+
+    font-size:24px;
+    font-weight:600;
+    margin-bottom:22px;
+
+}
+
+h2 {
+
+    font-size:18px;
+    font-weight:600;
+    margin-bottom:16px;
+
+}
+
+a {
+
+    color:var(--marca-texto);
+
+}
+
+/*
+| Un único anillo de foco para toda la aplicación, visible en los
+| dos temas: con el teclado hay que saber dónde se está.
+*/
+
+:focus-visible {
+
+    outline:2px solid var(--marca);
+    outline-offset:2px;
+    border-radius:4px;
+
+}
+
+/*
+| El primer tabulador de la página. Sin esto, para llegar al
+| contenido con el teclado hay que recorrer el menú entero en
+| cada carga.
+*/
+
+.saltar {
+
+    position:absolute;
+    left:-9999px;
+    top:8px;
+    z-index:100;
+    background:var(--marca);
+    color:var(--sobre-marca);
+    padding:10px 18px;
+    border-radius:var(--radio-chico);
+    font-weight:600;
+    text-decoration:none;
+
+}
+
+.saltar:focus {
+
+    left:8px;
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| Disposición
+|--------------------------------------------------------------------------
+|
+| Menú lateral fijo y contenido a la derecha. Antes cada pantalla
+| era una página suelta con un botón de "volver al menú
+| principal": para ir de Empresas a Agenda había que pasar por el
+| índice. El menú lateral es lo que tiene cualquier aplicación
+| empresarial, y es lo que la plataforma se va a encontrar.
+|
+*/
+
+.disposicion {
+
+    display:grid;
+    grid-template-columns:248px minmax(0, 1fr);
+    min-height:100vh;
+
+}
+
+.lateral {
+
+    position:sticky;
+    top:0;
+    align-self:start;
+    height:100vh;
+
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+
+    padding:22px 16px;
+
+    background:var(--superficie-lateral);
+    border-right:1px solid var(--linea);
+
+}
+
+.lateral .marca {
+
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:0 8px 18px;
+    border-bottom:1px solid var(--linea);
+    margin-bottom:8px;
+
+}
+
+.marcaSimbolo {
+
+    width:30px;
+    height:30px;
+    flex:none;
+    border-radius:var(--radio-chico);
+    background:var(--marca);
+    color:var(--sobre-marca);
+    font-size:15px;
+    font-weight:700;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+}
+
+.marcaNombre {
+
+    font-size:13px;
+    font-weight:600;
+    color:var(--texto-suave);
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    line-height:1.2;
+
+}
+
+.navegacion {
+
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+
+}
+
+.navGrupo {
+
+    margin-top:14px;
+    padding:0 12px 6px;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--texto-inerte);
+
+}
+
+.navItem {
+
+    /*
+    | La mano la pone la clase y no la etiqueta: una de las entradas del menú
+    | no es un `button` —Informes, a propósito— y la regla de `button` no
+    | llega a ella. Lo que se puede pulsar tiene que decirlo, sea la etiqueta
+    | que sea.
+    */
+
+    cursor:pointer;
+
+    display:flex;
+    align-items:center;
+    gap:12px;
+
+    width:100%;
+    padding:10px 12px;
+
+    background:transparent;
+    border:1px solid transparent;
+    border-radius:var(--radio-chico);
+
+    color:var(--texto);
+    font-size:14px;
+    font-weight:500;
+    text-align:left;
+
+}
+
+/*
+| Los estados de la navegación llevan el ascendiente delante a
+| propósito: `.navegacion .navItem` pesa más que la regla general
+| de `button:hover`, y sin eso al acercar el ratón a una sección
+| se encendería entera.
+*/
+
+.navegacion .navItem:hover {
+
+    background:var(--superficie-hundida);
+    color:var(--tinta);
+
+}
+
+.navegacion .navItem[aria-current="page"],
+.navegacion .navItem[aria-current="page"]:hover {
+
+    background:var(--marca-suave);
+    border-color:var(--marca-borde);
+    color:var(--tinta);
+    font-weight:600;
+
+}
+
+/*
+| Lo que dice estar escondido, escondido.
+|
+| `hidden` es un atributo, y la regla del navegador que lo esconde
+| —`[hidden]{display:none}`— pesa menos que cualquier clase con un `display`
+| dentro. Las entradas de un grupo cerrado llevan `.navItem`, que dice
+| `display:flex`, así que **seguían ocupando su sitio y se podían pulsar**:
+| medido, `hidden=true` y `getClientRects()` devolviendo 1. El menú las
+| escondía y el Discovery las pulsaba igual, que es la peor manera de fallar
+| —parecía funcionar—.
+|
+| Va sobre el atributo y no sobre `.navItem` porque la trampa es del atributo:
+| cualquier cosa de este laboratorio que se esconda así se habría encontrado
+| con lo mismo.
+*/
+
+[hidden] {
+
+    display:none !important;
+
+}
+
+/*
+| Un grupo del menú que se abre, y lo que lleva dentro.
+|
+| Se pinta como el encabezado de grupo que ya había —son la misma cosa para
+| quien mira— y se distingue por la flecha y por la mano: uno se puede pulsar
+| y el otro no.
+*/
+
+.navGrupoPlegable {
+
+    cursor:pointer;
+
+    display:flex;
+    align-items:center;
+    gap:6px;
+
+    margin:14px 0 6px;
+    padding:0 12px;
+
+    color:var(--texto-suave);
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+
+}
+
+/*
+| La cabecera que es un `button` tiene que verse igual que la que no lo es:
+| la diferencia está en la etiqueta, que es lo que se pregunta, y no en el
+| aspecto. Y la entrada que es un enlace, igual que las demás.
+*/
+
+.navGrupoBoton {
+
+    width:100%;
+
+    background:none;
+    border:0;
+
+    font-family:inherit;
+    text-align:left;
+
+}
+
+a.navItem {
+
+    text-decoration:none;
+
+}
+
+/*
+| El icono que se pinta con CSS, como una fuente de iconos. El carácter va en
+| el contenido generado y no en el documento, que es lo que hace que entre en
+| el nombre accesible sin que nadie lo haya escrito.
+*/
+
+.navIconoFuente::before {
+
+    content:attr(data-icono);
+
+}
+
+.navGrupoPlegable:hover {
+
+    color:var(--tinta);
+
+}
+
+.navGrupoFlecha {
+
+    font-size:9px;
+
+}
+
+.navItemDentro {
+
+    padding-left:26px;
+
+}
+
+.navIcono {
+
+    width:16px;
+    text-align:center;
+    color:var(--texto-suave);
+    flex:none;
+
+}
+
+.navegacion .navItem[aria-current="page"] .navIcono {
+
+    color:var(--marca-texto);
+
+}
+
+/*
+| Cuántos registros hay en cada sección. Saber que hay algo
+| detrás sin tener que entrar.
+*/
+
+.navCuenta {
+
+    margin-left:auto;
+    font-size:12px;
+    font-weight:600;
+    color:var(--texto-suave);
+    background:var(--superficie-hundida);
+    border:1px solid var(--linea);
+    border-radius:999px;
+    padding:1px 8px;
+    min-width:24px;
+    text-align:center;
+
+}
+
+.navCuenta:empty {
+
+    display:none;
+
+}
+
+.lateralPie {
+
+    margin-top:auto;
+    padding-top:16px;
+    border-top:1px solid var(--linea);
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+
+}
+
+.sesionUsuario {
+
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:0 4px;
+    min-width:0;
+
+}
+
+.sesionInicial {
+
+    width:30px;
+    height:30px;
+    flex:none;
+    border-radius:50%;
+    background:var(--marca);
+    color:var(--sobre-marca);
+    font-size:13px;
+    font-weight:700;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+}
+
+.sesionDatos {
+
+    display:flex;
+    flex-direction:column;
+    min-width:0;
+    line-height:1.25;
+
+}
+
+.sesionNombre {
+
+    font-size:14px;
+    font-weight:600;
+    color:var(--tinta);
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+
+}
+
+.sesionPapel {
+
+    font-size:11px;
+    font-weight:600;
+    color:var(--marca-texto);
+    text-transform:uppercase;
+    letter-spacing:.05em;
+
+}
+
+.sesionAcciones {
+
+    display:flex;
+    gap:8px;
+
+}
+
+.sesionAcciones button {
+
+    flex:1;
+
+}
+
+.iconoBoton {
+
+    flex:none !important;
+    width:36px;
+    padding:7px 0;
+    font-size:15px;
+    line-height:1;
+
+}
+
+.principal {
+
+    display:flex;
+    flex-direction:column;
+    min-width:0;
+
+    padding:28px 32px 48px;
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| Controles
+|--------------------------------------------------------------------------
+|
+| El botón de partida es el discreto y no el naranja, al revés
+| que en la plataforma. Aquí casi todos los botones son acciones
+| de una fila —editar, eliminar, mover— y hay muchos a la vista a
+| la vez: con el naranja de partida, la pantalla entera pediría
+| atención y la acción principal dejaría de distinguirse.
+|
+*/
+
+button {
+
+    cursor:pointer;
+
+    background:var(--superficie);
+    color:var(--texto);
+    border:1px solid var(--linea);
+    border-radius:var(--radio-chico);
+
+    padding:8px 14px;
+
+    font-family:inherit;
+    font-size:14px;
+    font-weight:500;
+    line-height:1.2;
+
+    transition:background .18s, border-color .18s, color .18s;
+
+}
+
+button:hover:not(:disabled) {
+
+    background:var(--superficie-hundida);
+    border-color:var(--linea-fuerte);
+    color:var(--tinta);
+
+}
+
+button:disabled {
+
+    background:var(--superficie);
+    color:var(--texto-inerte);
+    cursor:not-allowed;
+    opacity:.6;
+
+}
+
+/* La acción que se busca en la pantalla, y sólo una por pantalla. */
+
+.btn-primary {
+
+    background:var(--marca);
+    color:var(--sobre-marca);
+    border-color:transparent;
+    font-weight:600;
+    padding:10px 18px;
+
+}
+
+.btn-primary:hover:not(:disabled) {
+
+    background:var(--marca-oscura);
+    color:var(--sobre-marca);
+    border-color:transparent;
+
+}
+
+.btn-secondary,
+.btn-cancel,
+.btn-volver {
+
+    background:var(--superficie);
+    color:var(--texto);
+    border-color:var(--linea);
+
+}
+
+.btn-secondary:hover:not(:disabled),
+.btn-cancel:hover:not(:disabled),
+.btn-volver:hover:not(:disabled) {
+
+    background:var(--superficie-hundida);
+    border-color:var(--linea-fuerte);
+    color:var(--tinta);
+
+}
+
+/*
+| Borrar se escribe en rojo, pero no se rellena de rojo: es una
+| acción que está en cada fila, y una tabla con quince botones
+| rojos grita antes de que nadie haya pedido borrar nada.
+*/
+
+.btn-delete,
+.btn-document-delete,
+.btn-comment-delete,
+.btn-linea-delete {
+
+    background:var(--superficie);
+    color:var(--fallo);
+    border-color:var(--fallo-borde);
+
+}
+
+.btn-delete:hover:not(:disabled),
+.btn-document-delete:hover:not(:disabled),
+.btn-comment-delete:hover:not(:disabled),
+.btn-linea-delete:hover:not(:disabled) {
+
+    background:var(--fallo-suave);
+    color:var(--fallo);
+    border-color:var(--fallo);
+
+}
+
+.btn-edit {
+
+    background:var(--superficie);
+    color:var(--texto);
+    border-color:var(--linea);
+
+}
+
+/* La descarga es un enlace, y necesita los estilos de botón. */
+
+.btn-download {
+
+    display:inline-block;
+
+    background:var(--superficie);
+    color:var(--texto);
+    border:1px solid var(--linea);
+    border-radius:var(--radio-chico);
+
+    padding:8px 14px;
+
+    font-size:14px;
+    font-weight:500;
+
+    text-decoration:none;
+
+}
+
+.btn-download:hover {
+
+    background:var(--superficie-hundida);
+    border-color:var(--linea-fuerte);
+    color:var(--tinta);
+
+}
+
+/* Mientras una acción está en marcha el botón lo dice. */
+
+button[aria-busy="true"] {
+
+    cursor:progress;
+    pointer-events:none;
+
+}
+
+input, select, textarea {
+
+    font-family:inherit;
+    font-size:14px;
+
+    color:var(--tinta);
+    background:var(--superficie);
+
+    border:1px solid var(--linea);
+    border-radius:var(--radio-chico);
+
+    padding:8px 10px;
+
+}
+
+input:hover, select:hover, textarea:hover {
+
+    border-color:var(--linea-fuerte);
+
+}
+
+input::placeholder,
+textarea::placeholder {
+
+    color:var(--texto-suave);
+
+}
+
+textarea {
+
+    resize:vertical;
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| Migas y pestañas
+|--------------------------------------------------------------------------
+*/
+
+.migas {
+
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:18px;
+
+}
+
+/*
+| Ir al registro anterior y al siguiente. Va a la derecha de las
+| migas, en el lado contrario al de volver al listado: son dos
+| formas de moverse distintas y no conviene que se confundan.
+*/
+
+.fichaPaso {
+
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-left:auto;
+
+}
+
+.fichaPosicion {
+
+    font-size:13px;
+    color:var(--texto-suave);
+    font-variant-numeric:tabular-nums;
+    white-space:nowrap;
+
+}
+
+/*
+| En las migas hay botones y enlaces: volver al listado es un
+| enlace, porque lleva a una dirección. El enlace necesita sus
+| estilos para no verse como texto suelto.
+*/
+
+a.btn-volver {
+
+    display:inline-block;
+    padding:8px 14px;
+    border:1px solid var(--linea);
+    border-radius:var(--radio-chico);
+    background:var(--superficie);
+    color:var(--texto);
+    font-size:14px;
+    font-weight:500;
+    text-decoration:none;
+
+}
+
+a.btn-volver:hover {
+
+    background:var(--superficie-hundida);
+    border-color:var(--linea-fuerte);
+    color:var(--tinta);
+
+}
+
+/*
+| Pestañas. La activa se marca con el subrayado y con el color,
+| no sólo con el color: quien no distinga bien los colores
+| también tiene que saber en cuál está.
+*/
+
+.pestanas {
+
+    display:flex;
+    gap:4px;
+    border-bottom:1px solid var(--linea);
+    margin-bottom:24px;
+
+}
+
+.pestanas button {
+
+    background:none;
+    border:none;
+    border-radius:0;
+    border-bottom:2px solid transparent;
+    margin-bottom:-1px;
+    padding:10px 16px;
+    color:var(--texto-suave);
+    font-size:14px;
+    font-weight:600;
+
+}
+
+.pestanas button:hover:not(:disabled) {
+
+    background:none;
+    border-color:transparent;
+    border-bottom-color:var(--linea-fuerte);
+    color:var(--tinta);
+
+}
+
+.pestanas button[aria-selected="true"] {
+
+    color:var(--tinta);
+    border-bottom-color:var(--marca);
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| Barra de acciones
+|--------------------------------------------------------------------------
+*/
+
+.toolbar {
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    flex-wrap:wrap;
+
+    margin-bottom:18px;
+
+}
+
+.toolbar-left {
+
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+
+}
+
+/*
+| La etiqueta de un filtro de la barra: va al lado de su
+| desplegable y no encima, que es como se leen los filtros de una
+| lista.
+*/
+
+.filtroEtiqueta {
+
+    font-size:13px;
+    font-weight:600;
+    color:var(--texto-suave);
+
+}
+
+#search,
+#commentFilter {
+
+    width:320px;
+    max-width:100%;
+    padding:9px 12px;
+    font-size:14px;
+
+}
+
+.subida {
+
+    display:flex;
+    align-items:center;
+    gap:12px;
+    flex-wrap:wrap;
+
+}
+
+.subida label {
+
+    font-weight:600;
+    color:var(--texto);
+
+}
+
+.subida input[type="file"] {
+
+    padding:7px 10px;
+    font-size:13px;
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| Tablas
+|--------------------------------------------------------------------------
+|
+| La cabecera va en gris claro y no en azul marino. Una cabecera
+| oscura pesa más que los datos, y los datos son lo que se viene
+| a leer.
+|
+*/
+
+table {
+
+    width:100%;
+    border-collapse:separate;
+    border-spacing:0;
+
+    background:var(--superficie);
+    border:1px solid var(--linea);
+    border-radius:var(--radio);
+    box-shadow:var(--sombra);
+
+    overflow:hidden;
+
+}
+
+thead {
+
+    background:var(--superficie-hundida);
+
+}
+
+th {
+
+    text-align:left;
+    padding:11px 15px;
+
+    color:var(--texto-suave);
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+
+    border-bottom:1px solid var(--linea);
+
+}
+
+td {
+
+    padding:12px 15px;
+    border-bottom:1px solid var(--linea);
+
+}
+
+tbody tr:hover {
+
+    background:var(--superficie-hundida);
+
+}
+
+tbody tr:last-child td {
+
+    border-bottom:none;
+
+}
+
+.action-buttons {
+
+    display:flex;
+    gap:8px;
+
+}
+
+.action-buttons button {
+
+    padding:5px 11px;
+    font-size:13px;
+
+}
+
+/*
+| El nombre de un registro lleva a su ficha. Va subrayado sólo al
+| pasar por encima: en una tabla llena de nombres, todos
+| subrayados, no se lee nada.
+*/
+
+a.ficha {
+
+    color:var(--enlace);
+    font-weight:600;
+    text-decoration:none;
+
+}
+
+a.ficha:hover {
+
+    text-decoration:underline;
+
+}
+
+/*
+| Ordenación por columna. El botón ocupa toda la celda para que
+| se pueda pulsar donde se espera, y hereda el aspecto de la
+| cabecera en lugar de parecer un botón encima de ella.
+*/
+
+th button.ordenar {
+
+    background:none;
+    border:none;
+    padding:0;
+    color:inherit;
+    font:inherit;
+    letter-spacing:inherit;
+    text-transform:inherit;
+    cursor:pointer;
+    text-align:left;
+    width:100%;
+
+}
+
+th button.ordenar:hover {
+
+    background:none;
+    color:var(--tinta);
+    text-decoration:underline;
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| Colocar a mano
+|--------------------------------------------------------------------------
+|
+| El tirador por el que se agarra una fila o una tarjeta. Se
+| arrastra por él y no por la fila entera: una fila lleva
+| enlaces y botones dentro, y arrastrar y pulsar se pelearían
+| por el mismo clic.
+|
+*/
+
+.tirador {
+
+    flex:none;
+    cursor:grab;
+    color:var(--texto-inerte);
+    font-size:15px;
+    line-height:1;
+    padding:2px;
+    border-radius:4px;
+    opacity:.35;
+    transition:opacity .15s, color .15s;
+
+}
+
+tbody tr:hover .tirador,
+tbody tr:focus-within .tirador,
+li:hover > .tirador,
+li:focus-within > .tirador {
+
+    opacity:1;
+    color:var(--texto-suave);
+
+}
+
+.tirador:hover {
+
+    color:var(--marca-texto);
+    background:var(--superficie-hundida);
+
+}
+
+.tirador:active {
+
+    cursor:grabbing;
+
+}
+
+.arrastrando {
+
+    opacity:.45;
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| Selección y paginación
+|--------------------------------------------------------------------------
+*/
+
+/*
+| Los manuales de la ayuda.
+|
+| El ancho se limita a lo que se lee de corrido: una línea de mil
+| píxeles obliga a mover la cabeza para volver al principio de la
+| siguiente, y un manual se lee entero o no se lee.
+*/
+
+.manual {
+
+    max-width:720px;
+    line-height:1.6;
+
+}
+
+.manual h1 { font-size:20px; margin:0 0 4px; }
+.manual h2 { font-size:17px; margin:30px 0 10px; padding-top:18px; border-top:1px solid var(--linea); }
+.manual h3 { font-size:15px; margin:20px 0 8px; }
+
+.manual p, .manual li { font-size:14px; }
+
+.manual ul, .manual ol { padding-left:22px; }
+
+.manual li { margin-bottom:6px; }
+
+.manual code {
+
+    padding:1px 5px;
+    border-radius:4px;
+    background:var(--superficie-hundida);
+    font-size:13px;
+
+}
+
+.manual table { width:100%; border-collapse:collapse; margin:12px 0 18px; font-size:13px; }
+.manual th, .manual td { padding:7px 10px; border-bottom:1px solid var(--linea); text-align:left; vertical-align:top; }
+.manual th { color:var(--texto-suave); }
+
+.manual blockquote {
+
+    margin:16px 0;
+    padding:10px 14px;
+    border-left:3px solid var(--aviso);
+    background:var(--superficie-hundida);
+
+}
+
+.manual blockquote p { margin:0; }
+
+
+/*
+| La primera columna lleva dos cosas: el tirador para colocar la
+| fila y la casilla para seleccionarla.
+*/
+
+.columna-seleccion {
+
+    width:66px;
+    white-space:nowrap;
+
+}
+
+.columna-seleccion .tirador {
+
+    display:inline-block;
+    margin-right:6px;
+    vertical-align:middle;
+
+}
+
+/*
+| Y en la lista que se puede colocar sin arrastrar, los dos botones
+| van con el tirador: son la misma función por dos caminos.
+|
+| Se ven siempre y no al pasar por encima como el tirador. Un control
+| que sólo aparece con el ratón encima no es una alternativa al ratón,
+| que es justo lo que tienen que ser.
+*/
+
+.columna-seleccion .colocar {
+
+    display:inline-block;
+    width:18px;
+    padding:0;
+    margin-right:2px;
+    border:1px solid var(--linea);
+    border-radius:4px;
+    background:var(--superficie);
+    color:var(--texto-suave);
+    font-size:9px;
+    line-height:16px;
+    vertical-align:middle;
+    cursor:pointer;
+
+}
+
+.columna-seleccion .colocar:hover:not(:disabled) {
+
+    background:var(--superficie-hundida);
+    color:var(--texto);
+
+}
+
+.columna-seleccion .colocar:disabled {
+
+    opacity:.35;
+    cursor:default;
+
+}
+
+/*
+| La pantalla de sin permiso.
+|
+| Con la marca y el menú de la aplicación, no como una página de
+| error del servidor: esto no es una caída, es la aplicación
+| diciendo que no.
+*/
+
+.sinPermiso {
+
+    max-width:520px;
+    margin:64px auto;
+    text-align:center;
+
+}
+
+.sinPermisoCodigo {
+
+    margin:0;
+    font-size:64px;
+    font-weight:700;
+    line-height:1;
+    color:var(--linea-fuerte);
+
+}
+
+.sinPermiso h1 {
+
+    margin:8px 0 12px;
+
+}
+
+/*
+| Donde no hay casilla que seleccionar —la lista de documentos de
+| una ficha— el tirador tiene su propia columna, estrecha.
+*/
+
+.columna-tirador {
+
+    width:38px;
+
+}
+
+/*
+| Con una columna ordenando, el tirador se apaga: lo que se ve no
+| es el orden de nadie, así que no hay nada que colocar.
+*/
+
+.tirador-apagado {
+
+    opacity:.15;
+    cursor:not-allowed;
+
+}
+
+.tirador-apagado:hover {
+
+    color:var(--texto-inerte);
+    background:none;
+
+}
+
+td input.seleccion,
+th input#seleccionTodo {
+
+    width:16px;
+    height:16px;
+    cursor:pointer;
+    accent-color:var(--marca);
+
+}
+
+.seleccion-barra {
+
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-top:14px;
+    font-size:14px;
+    color:var(--texto-suave);
+
+}
+
+.paginacion {
+
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-top:18px;
+    font-size:14px;
+
+}
+
+.paginacion label {
+
+    font-weight:600;
+    color:var(--texto);
+
+}
+
+.paginacion-estado {
+
+    flex:1;
+    text-align:center;
+    color:var(--texto-suave);
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| Fichas y avisos
+|--------------------------------------------------------------------------
+*/
+
+.datos {
+
+    display:grid;
+    grid-template-columns:180px 1fr;
+    gap:12px 20px;
+
+    background:var(--superficie);
+    border:1px solid var(--linea);
+    border-radius:var(--radio);
+    box-shadow:var(--sombra);
+    padding:24px;
+    margin:0;
+
+}
+
+.datos dt {
+
+    font-weight:600;
+    color:var(--texto-suave);
+
+}
+
+.datos dd {
+
+    margin:0;
+    color:var(--tinta);
+
+}
+
+.aviso {
+
+    margin-bottom:15px;
+    font-size:14px;
+    min-height:20px;
+    color:var(--texto-suave);
+
+}
+
+.aviso.ok {
+
+    color:var(--correcto);
+
+}
+
+.aviso.error {
+
+    color:var(--fallo);
+
+}
+
+.badge {
+
+    display:inline-block;
+    padding:3px 10px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:600;
+    border:1px solid transparent;
+
+}
+
+.badge.active {
+
+    background:var(--correcto-suave);
+    border-color:var(--correcto-borde);
+    color:var(--correcto);
+
+}
+
+.badge.pending {
+
+    background:var(--aviso-suave);
+    border-color:var(--aviso-borde);
+    color:var(--aviso);
+
+}
+
+.badge.inactive {
+
+    background:var(--omitido-suave);
+    border-color:var(--linea);
+    color:var(--omitido);
+
+}
+
+/*
+| Avisos que se van solos. Van arriba a la derecha, fuera del
+| camino de lo que se está haciendo.
+*/
+
+.avisos {
+
+    position:fixed;
+    top:20px;
+    right:20px;
+    z-index:100;
+
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+
+}
+
+.toast {
+
+    padding:12px 18px;
+    border-radius:var(--radio-chico);
+    box-shadow:var(--sombra-alta);
+    font-size:14px;
+    font-weight:600;
+    max-width:360px;
+
+    background:var(--correcto-suave);
+    border:1px solid var(--correcto-borde);
+    color:var(--correcto);
+
+}
+
+.toast.error {
+
+    background:var(--fallo-suave);
+    border-color:var(--fallo-borde);
+    color:var(--fallo);
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| Diálogos
+|--------------------------------------------------------------------------
+|
+| El diálogo se ajusta a lo que lleva dentro: ancho de partida
+| cómodo, tope en lo que cabe en la ventana, y si el contenido
+| es más alto que la pantalla, se desplaza por dentro. Antes
+| tenía un ancho fijo de 420 px y los formularios largos se
+| salían por abajo sin forma de llegar a los botones.
+|
+*/
+
+.modal-overlay {
+
+    position:fixed;
+    inset:0;
+    z-index:50;
+
+    background:rgba(7, 7, 7, .5);
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    padding:24px;
+
+}
+
+/*
+| El diálogo se ajusta a lo que lleva dentro.
+|
+| Tenía un ancho fijo. El presupuesto lleva dentro una tabla de
+| líneas de seis columnas, que mide bastante más, y como el ancho
+| del diálogo no dependía del contenido, la tabla y los campos se
+| salían por el lado derecho.
+|
+| Con `max-content` el diálogo mide lo que mida su contenido; el
+| suelo lo pone `min-width`, para que un formulario de cuatro
+| campos no salga estrecho, y el techo `max-width`, para que no
+| se salga de la ventana. El alto va aparte: si no cabe, se
+| desplaza por dentro en lugar de dejar los botones fuera de la
+| pantalla.
+*/
+
+.modal {
+
+    background:var(--superficie);
+    border:1px solid var(--linea);
+    border-radius:var(--radio);
+    box-shadow:var(--sombra-alta);
+
+    padding:26px;
+
+    width:max-content;
+    min-width:min(460px, 100%);
+    max-width:100%;
+    max-height:calc(100vh - 48px);
+
+    overflow:auto;
+
+}
+
+.modal h2 {
+
+    margin:0 0 20px;
+    font-size:19px;
+
+}
+
+.form {
+
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+
+}
+
+.form label {
+
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    font-size:13px;
+    font-weight:600;
+    color:var(--texto);
+
+}
+
+.form input,
+.form select,
+.form textarea {
+
+    width:100%;
+    max-width:100%;
+    padding:9px 11px;
+
+}
+
+/* Grupos de casillas: los permisos de un rol, por ejemplo. */
+
+.form .checks {
+
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    border:1px solid var(--linea);
+    border-radius:var(--radio-chico);
+    padding:12px 14px;
+
+}
+
+.form .checks legend {
+
+    font-weight:600;
+    padding:0 6px;
+    color:var(--tinta);
+
+}
+
+.form .checks label {
+
+    flex-direction:row;
+    align-items:center;
+    gap:8px;
+    font-weight:400;
+
+}
+
+.form .checks input {
+
+    width:16px;
+    height:16px;
+    padding:0;
+    accent-color:var(--marca);
+
+}
+
+/*
+| Formulario por pasos.
+|
+| Ojo con el display: si se le pusiera `display:flex` a `.paso` a
+| secas, ganaría al `display:none` que trae `hidden` y se verían
+| todos los pasos a la vez. De ahí el `:not([hidden])`.
+*/
+
+.form .paso:not([hidden]) {
+
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    border:none;
+    padding:0;
+    margin:0;
+
+}
+
+.form .paso legend {
+
+    font-weight:600;
+    font-size:15px;
+    padding:0;
+    margin-bottom:4px;
+    color:var(--tinta);
+
+}
+
+.pasos {
+
+    display:flex;
+    gap:8px;
+    list-style:none;
+    margin:0 0 6px;
+    padding:0;
+    font-size:13px;
+    color:var(--texto-inerte);
+
+}
+
+.pasos li {
+
+    font-weight:600;
+
+}
+
+.pasos li[aria-current="step"] {
+
+    color:var(--marca-texto);
+
+}
+
+.modal-buttons {
+
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+    margin-top:18px;
+
+}
+
+/*
+| La confirmación se distingue de un formulario en que no tiene
+| campos: sólo una pregunta y dos respuestas.
+*/
+
+.confirmacion {
+
+    width:min(420px, 100%);
+    min-width:0;
+
+}
+
+.confirmacion-texto {
+
+    margin:0 0 4px;
+    color:var(--texto);
+    line-height:1.5;
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| Formularios de pantalla
+|--------------------------------------------------------------------------
+|
+| Los de la configuración, que no viven dentro de un diálogo.
+| Llevan el mismo `.form` que los de alta —así se escriben una
+| sola vez— con el ancho que necesita un formulario suelto en una
+| pantalla entera.
+|
+*/
+
+.form.ajustes {
+
+    max-width:520px;
+
+    background:var(--superficie);
+    border:1px solid var(--linea);
+    border-radius:var(--radio);
+    box-shadow:var(--sombra);
+
+    padding:24px;
+
+}
+
+.ayudaCampo {
+
+    max-width:520px;
+    margin:-4px 0 0;
+    color:var(--texto-suave);
+    font-size:13px;
+
+}
+
+/*
+| La franja horaria: dos desplegables uno al lado del otro, que
+| es como se lee "de ocho a ocho".
+*/
+
+.franja {
+
+    display:flex;
+    gap:14px;
+
+}
+
+.franja label {
+
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    font-size:13px;
+    font-weight:600;
+    color:var(--texto);
+
+}
+
+/*
+| Sólo para lectores de pantalla: etiquetas que la pantalla ya
+| explica por su contexto, pero que sin verla no se entienden.
+*/
+
+.soloLectores {
+
+    position:absolute;
+    width:1px;
+    height:1px;
+    padding:0;
+    margin:-1px;
+    overflow:hidden;
+    clip:rect(0 0 0 0);
+    white-space:nowrap;
+    border:0;
+
+}
+
+/*
+| La hora de una cita: dos desplegables con los dos puntos en
+| medio, como se escribe una hora.
+*/
+
+.hora {
+
+    display:flex;
+    align-items:center;
+    gap:6px;
+
+}
+
+.hora select {
+
+    flex:1;
+
+}
+
+.horaSeparador {
+
+    font-weight:600;
+    color:var(--texto-suave);
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| Permisos
+|--------------------------------------------------------------------------
+|
+| Lo que el rol de quien ha entrado no permite, no se enseña.
+|
+| Se hace con un atributo en el `body` y desde la hoja de
+| estilos, y no escondiendo cada botón según se pinta: las filas
+| de las tablas se repintan al buscar, al ordenar y al pasar de
+| página, y habría que acordarse en todos esos sitios.
+|
+| Esconder no es impedir —quien mire el HTML los verá—, así que
+| las acciones comprueban además el permiso antes de hacer nada.
+| Aquí es de propio: esconder es lo que se ve, y comprobar es lo
+| que manda.
+|
+*/
+
+body[data-puede-editar="no"] .btn-primary,
+body[data-puede-editar="no"] .btn-edit,
+body[data-puede-editar="no"] .kanban-mover {
+
+    display:none;
+
+}
+
+body[data-puede-eliminar="no"] .btn-delete,
+body[data-puede-eliminar="no"] .btn-document-delete,
+body[data-puede-eliminar="no"] .btn-comment-delete,
+body[data-puede-eliminar="no"] .seleccion-barra {
+
+    display:none;
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| Autocompletado
+|--------------------------------------------------------------------------
+|
+| La lista se pinta encima de lo que venga debajo, y por eso el
+| contenedor tiene posición propia.
+*/
+
+.autocompletar {
+
+    position:relative;
+
+}
+
+.autocompletar input[type="text"] {
+
+    width:100%;
+
+}
+
+.autocompletar ul {
+
+    position:absolute;
+    z-index:10;
+    left:0;
+    right:0;
+
+    max-height:180px;
+    overflow-y:auto;
+
+    margin:2px 0 0;
+    padding:4px;
+    list-style:none;
+
+    background:var(--superficie);
+    border:1px solid var(--linea);
+    border-radius:var(--radio-chico);
+    box-shadow:var(--sombra-alta);
+
+}
+
+.autocompletar li {
+
+    padding:8px 10px;
+    border-radius:6px;
+    cursor:pointer;
+    font-size:14px;
+
+}
+
+.autocompletar li:hover {
+
+    background:var(--marca-suave);
+
+}
+
+/*
+| Quien haya pedido al sistema que no se mueva nada, que no vea
+| nada moverse.
+*/
+
+@media (prefers-reduced-motion: reduce) {
+
+    *, *::before, *::after {
+
+        animation-duration:.01ms !important;
+        animation-iteration-count:1 !important;
+        transition-duration:.01ms !important;
+
+    }
+
+}
+
+/*
+| Pantallas estrechas: el menú deja de ser una columna y se pone
+| encima, que es lo único que cabe.
+*/
+
+@media (max-width: 860px) {
+
+    .disposicion {
+
+        grid-template-columns:minmax(0, 1fr);
+
+    }
+
+    .lateral {
+
+        position:static;
+        height:auto;
+        border-right:none;
+        border-bottom:1px solid var(--linea);
+
+    }
+
+    .principal {
+
+        padding:20px 16px 40px;
+
+    }
+
+}
+
+/* ---------- Los comentarios ---------- */
+
+.comentario-nuevo {
+
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin-bottom:18px;
+    max-width:44rem;
+
+}
+
+/*
+* El cuadro de escribir no lleva etiqueta a la vista: encima de un
+* campo con "Escribe un comentario..." dentro, la palabra
+* "Comentario" no dice nada que no se sepa ya. El nombre sigue
+* estando para quien no ve la pantalla, en el `aria-label`.
+*/
+
+.comentario-nuevo textarea {
+
+    min-height:7.5rem;
+    resize:vertical;
+
+}
+
+.comentario-nuevo button {
+
+    align-self:flex-start;
+
+}
+
+.comentarios {
+
+    list-style:none;
+    margin:0;
+    padding:0;
+
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+
+    max-width:44rem;
+
+}
+
+/*
+* Un comentario es una tarjeta, con la misma forma que las demás
+* de la aplicación: el fondo de superficie, el borde y el radio de
+* siempre y la sombra de la hoja de marca.
+*
+* Antes llevaba una barra de color a la izquierda y el radio
+* pequeño, y no se parecía a nada: ni a las tarjetas del perfil ni
+* a las del panel de entrada. Lo que la distingue de una tabla no
+* tiene que ser un adorno propio, tiene que ser que es una
+* tarjeta.
+*/
+
+.comentario {
+
+    background:var(--superficie);
+    border:1px solid var(--linea);
+    border-radius:var(--radio);
+    box-shadow:var(--sombra);
+    padding:16px 18px;
+
+}
+
+.comentario[draggable="true"] {
+
+    cursor:grab;
+
+}
+
+.comentario.arrastrando {
+
+    opacity:.45;
+
+}
+
+.comentario.comentario-recibe {
+
+    border-top:2px solid var(--marca);
+
+}
+
+.comentario-cabecera {
+
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:16px;
+
+    margin-bottom:10px;
+    padding-bottom:10px;
+    border-bottom:1px solid var(--linea);
+
+}
+
+.comentario-usuario {
+
+    font-weight:600;
+    color:var(--tinta);
+    font-size:14px;
+
+}
+
+.comentario-fecha {
+
+    color:var(--texto-suave);
+    font-size:13px;
+    white-space:nowrap;
+
+}
+
+.comentario-texto {
+
+    margin:0 0 12px;
+    white-space:pre-wrap;
+    color:var(--texto);
+    line-height:1.5;
+
+}
+
+.comentario-acciones {
+
+    display:flex;
+    justify-content:flex-end;
+
+}
+
+.btn-comment-delete {
+
+    padding:3px 8px;
+    font-size:13px;
+
+}
+
+/*
+| El cuadro de mando.
+|
+| Cajas con una cifra grande, su nombre y una línea que la explica. Sin
+| tabla y sin formulario a propósito: esta pantalla existe para que la
+| plataforma se encuentre con algo que sus reglas no saben leer.
+*/
+
+.indicadores {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    gap: 1rem;
+    margin: 1.2rem 0;
+}
+
+/*
+| Cada caja es una pestaña, así que es un <button>: se le quitan los
+| adornos que trae de serie y se le deja el aspecto de caja. El texto
+| va a la izquierda porque un botón lo centra y esto no se lee como un
+| botón, se lee como una cifra.
+*/
+
+.indicador {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    padding: 1rem 1.2rem;
+    border: 1px solid var(--linea);
+    border-radius: var(--radio);
+    background: var(--superficie);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.indicador:hover {
+    border-color: var(--linea-fuerte);
+}
+
+/*
+| La elegida se distingue por el borde y el fondo, no sólo por el
+| color del texto: quien no distinga los colores tiene que poder ver
+| cuál está puesta. Y además lo dice `aria-selected`, que es lo que
+| oye quien no la ve.
+*/
+
+.indicador[aria-selected="true"] {
+    border-color: var(--marca);
+    background: var(--marca-suave);
+    box-shadow: inset 0 -3px 0 var(--marca);
+}
+
+.indicador[aria-selected="true"] .indicadorValor {
+    color: var(--marca-texto);
+}
+
+.indicadorValor {
+    font-size: 1.9rem;
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--tinta);
+}
+
+.indicadorNombre {
+    font-weight: 600;
+}
+
+.indicadorDice {
+    color: var(--texto-suave);
+    font-size: 0.9rem;
+}
+
+/*
+|--------------------------------------------------------------------------
+| La gráfica del cuadro de mando
+|--------------------------------------------------------------------------
+|
+| Un dibujo, su título, su resumen y sus datos en una tabla. La tabla va
+| dentro de un <details> porque no hace falta verla siempre, pero tiene que
+| poder verse: es lo que hace que la gráfica se pueda comprobar sin mirarla.
+|
+*/
+
+.grafica {
+    margin: 1.2rem 0 0;
+    padding: 1rem 1.2rem;
+    border: 1px solid var(--linea);
+    border-radius: var(--radio);
+    background: var(--superficie);
+}
+
+.graficaTitulo {
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+}
+
+.graficaDibujo {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 15rem;
+}
+
+.graficaEje {
+    stroke: var(--linea-fuerte);
+    stroke-width: 1;
+}
+
+.graficaLinea {
+    fill: none;
+    stroke: var(--marca);
+    stroke-width: 2.5;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+}
+
+.graficaPunto {
+    fill: var(--superficie);
+    stroke: var(--marca);
+    stroke-width: 2.5;
+}
+
+.graficaMes,
+.graficaMarca {
+    fill: var(--texto-suave);
+    font-size: 0.75rem;
+}
+
+.graficaResumen {
+    margin: 0.6rem 0 0;
+    color: var(--texto-suave);
+    font-size: 0.9rem;
+}
+
+.graficaDatos {
+    margin-top: 0.6rem;
+}
+
+.graficaDatos summary {
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.graficaDatos table {
+    margin-top: 0.6rem;
+    width: auto;
+    min-width: 16rem;
+}
+
+.graficaDatos caption {
+    text-align: left;
+    padding-bottom: 0.4rem;
+    color: var(--texto-suave);
+    font-size: 0.9rem;
+}
+
+/*
+| El ejercicio del cuadro de mando: la etiqueta y su desplegable en línea,
+| dentro de la barra de acciones.
+*/
+
+.panelEjercicio {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+}
+
+.panelEjercicio select {
+    width: auto;
+    min-width: 6rem;
+}
+
+/*
+| Editar dentro de la fila
+|
+| El lápiz vive en la celda y no en la columna de acciones a propósito: lo
+| que se edita es **ese** dato, y ponerlo con los demás botones lo
+| convertiría en una acción de la fila, que es otra cosa. Aparece al pasar
+| por encima o al llegar con el teclado — a la vista siempre, una tabla de
+| catorce filas tendría catorce lápices compitiendo con lo que se lee.
+*/
+
+.celda-editable {
+
+    white-space:nowrap;
+
+}
+
+.btn-editar-en-linea {
+
+    margin-left:6px;
+    padding:1px 5px;
+    border:1px solid transparent;
+    border-radius:var(--radio-chico, 4px);
+    background:transparent;
+    color:var(--tinta-suave);
+    font-size:12px;
+    line-height:1;
+    cursor:pointer;
+    opacity:0;
+
+}
+
+tr:hover .btn-editar-en-linea,
+.btn-editar-en-linea:focus-visible {
+
+    opacity:1;
+
+}
+
+.btn-editar-en-linea:hover {
+
+    border-color:var(--linea-fuerte);
+    color:var(--marca-texto);
+
+}
+
+.campo-en-linea {
+
+    width:120px;
+    padding:3px 6px;
+    border:1px solid var(--marca);
+    border-radius:var(--radio-chico, 4px);
+    background:var(--superficie);
+    color:var(--tinta);
+    font-size:13px;
+    font-family:inherit;
+
+}
+
+.btn-confirmar-en-linea,
+.btn-cancelar-en-linea {
+
+    margin-left:4px;
+    padding:2px 6px;
+    border:1px solid var(--linea-fuerte);
+    border-radius:var(--radio-chico, 4px);
+    background:var(--superficie);
+    color:var(--tinta);
+    font-size:12px;
+    line-height:1;
+    cursor:pointer;
+
+}
+
+.btn-confirmar-en-linea:hover {
+
+    border-color:var(--marca);
+    color:var(--marca-texto);
+
+}
+
+/*
+| Esconder el menú
+|
+| El botón está siempre, dentro o fuera: si se fuera con el menú no habría
+| manera de traerlo de vuelta. Va pegado al borde de arriba, donde no tapa
+| nada, y se mueve con el menú para no quedarse encima de él.
+*/
+
+.menuBoton {
+
+    position:fixed;
+    top:14px;
+    left:212px;
+    z-index:20;
+
+    width:28px;
+    height:28px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border:1px solid var(--linea);
+    border-radius:var(--radio-chico, 4px);
+    background:var(--superficie);
+    color:var(--tinta-suave);
+
+    font-size:13px;
+    line-height:1;
+    cursor:pointer;
+
+    transition:left .12s ease;
+
+}
+
+.menuBoton:hover {
+
+    border-color:var(--linea-fuerte);
+    color:var(--tinta);
+
+}
+
+body[data-menu-escondido="sí"] .lateral {
+
+    display:none;
+
+}
+
+body[data-menu-escondido="sí"] .disposicion {
+
+    grid-template-columns:minmax(0, 1fr);
+
+}
+
+body[data-menu-escondido="sí"] .menuBoton {
+
+    left:14px;
+
+}
+
+/*
+| Con el menú escondido, el contenido necesita sitio por la izquierda para no
+| quedar debajo del botón.
+*/
+
+body[data-menu-escondido="sí"] .principal {
+
+    padding-left:52px;
+
+}
+
+/*
+| El desplegable de varias opciones de los filtros de SABESP
+|
+| El campo con nombre se esconde como lo esconde PrimeNG: recortado a nada y
+| no con `display:none`, que lo sacaría también del árbol de accesibilidad.
+*/
+
+.oculto-accesible{
+    position:absolute;
+    width:1px;
+    height:1px;
+    overflow:hidden;
+    clip:rect(0 0 0 0);
+    clip-path:inset(50%);
+    white-space:nowrap;
+}
+
+/*
+* Y el campo, a cero: así lo deja PrimeNG, y es lo que hace que quien mire
+* sólo lo visible no lo encuentre. Medido en SABESP el 15 de octubre de 2026.
+*/
+
+.oculto-accesible input{
+    width:0;
+    height:0;
+    padding:0;
+    border:0;
+}
+
+.multiselect{
+    position:relative;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    min-width:180px;
+    padding:6px 10px;
+    border:1px solid var(--linea-fuerte);
+    border-radius:6px;
+    background:var(--superficie);
+    color:var(--tinta);
+    cursor:pointer;
+}
+
+.multiselect-rotulo{
+    flex:1;
+}
+
+.multiselect-vacio{
+    color:var(--texto-suave);
+}
+
+.multiselect-panel{
+    position:absolute;
+    z-index:50;
+    padding:6px 0;
+    border:1px solid var(--linea-fuerte);
+    border-radius:6px;
+    background:var(--superficie);
+    box-shadow:0 6px 18px rgba(0,0,0,.12);
+}
+
+.multiselect-panel ul{
+    list-style:none;
+    margin:0;
+    padding:0;
+}
+
+.multiselect-panel [role=option],
+.multiselect-todas{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:6px 12px;
+    cursor:pointer;
+}
+
+.multiselect-panel [role=option][aria-selected=true]{
+    background:var(--marca-suave);
+}
+
+/*
+| El calendario propio, el de PrimeNG que usan las altas de SABESP.
+*/
+
+.calendario-panel{
+    position:absolute;
+    z-index:1100;
+    padding:8px;
+    border:1px solid var(--linea-fuerte);
+    border-radius:6px;
+    background:var(--superficie);
+    box-shadow:0 6px 18px rgba(0,0,0,.12);
+}
+
+.calendario-cabecera{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:8px;
+    margin-bottom:6px;
+}
+
+.calendario-panel td{
+    padding:4px 6px;
+    text-align:center;
+    cursor:pointer;
+}
+
+.calendario-panel td.otro-mes{
+    color:var(--texto-inerte);
+}
+
+/*
+| El interruptor de PrimeNG, el `p-toggleswitch` de SABESP: el campo de verdad
+| es un `input type="checkbox"` transparente que ocupa la misma caja que su
+| dibujo, y lo que se ve es el dibujo. Para la plataforma el campo "no se ve"
+| —tiene `opacity: 0`, que es también como se esconden los menús— y se pulsa
+| igual. En el laboratorio, "Sólo pendientes" de Gastos.
+*/
+
+.interruptor{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+}
+
+.interruptor-caja{
+    position:relative;
+    display:inline-block;
+    width:40px;
+    height:24px;
+}
+
+.interruptor-campo{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    margin:0;
+    opacity:0;
+    z-index:1;
+    cursor:pointer;
+}
+
+.interruptor-dibujo{
+    position:absolute;
+    inset:0;
+    border-radius:12px;
+    background:var(--linea-fuerte);
+    transition:background .15s;
+}
+
+.interruptor-dibujo::after{
+    content:"";
+    position:absolute;
+    top:3px;
+    left:3px;
+    width:18px;
+    height:18px;
+    border-radius:50%;
+    background:var(--superficie);
+    transition:transform .15s;
+}
+
+.interruptor-campo:checked + .interruptor-dibujo{
+    background:var(--marca);
+}
+
+.interruptor-campo:checked + .interruptor-dibujo::after{
+    transform:translateX(16px);
+}
+
+/*
+| Los botones de alternativa, el `p-selectbutton` de SABESP. En el laboratorio,
+| "Importes" de Gastos.
+*/
+
+.alternativas{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+}
+
+.alternativas-grupo{
+    display:inline-flex;
+    border:1px solid var(--linea-fuerte);
+    border-radius:var(--radio-chico);
+    overflow:hidden;
+}
+
+.alternativas-grupo [role="button"]{
+    padding:4px 10px;
+    cursor:pointer;
+    background:var(--superficie);
+}
+
+.alternativas-grupo [aria-pressed="true"]{
+    background:var(--marca);
+    color:var(--marca-texto);
+}
+
+/*
+| El panel lateral de filtros, el `p-drawer` de SABESP. En el laboratorio,
+| "Más filtros" de Gastos.
+*/
+
+.panel-filtros{
+    position:fixed;
+    top:0;
+    right:0;
+    bottom:0;
+    width:320px;
+    padding:16px;
+    background:var(--superficie);
+    border-left:1px solid var(--linea-fuerte);
+    box-shadow:-6px 0 18px rgba(0,0,0,.12);
+    z-index:1000;
+    overflow:auto;
+}
+
+.panel-filtros-pie{
+    display:flex;
+    justify-content:flex-end;
+    gap:8px;
+    margin-top:16px;
+}
+
+/*
+| El dial, el `p-knob` de SABESP. En el laboratorio, "Empresas activas" de
+| Informes.
+*/
+
+.dial{
+    display:inline-flex;
+    flex-direction:column;
+    align-items:center;
+    gap:4px;
+    margin:12px 0;
+}
+
+/*
+| Almacén: la barra que abre ventanas y las pestañas de las abiertas, como un
+| escritorio. Juntas y a la izquierda, que es como se leen en un programa de
+| escritorio; la barra general de las demás pantallas reparte a los extremos.
+*/
+
+#barraAlmacen {
+    justify-content:flex-start;
+    gap:8px;
+}
+
+#pestanasAlmacen {
+    display:flex;
+    gap:4px;
+    margin:8px 0 12px;
+    border-bottom:1px solid var(--linea, #ddd);
+}
+
+#pestanasAlmacen [role=tab] {
+    padding:6px 12px;
+    cursor:pointer;
+    border-radius:6px 6px 0 0;
+}
+
+#pestanasAlmacen [role=tab][aria-selected=true] {
+    font-weight:600;
+    background:var(--superficie, #fff);
+}
+
+/*
+| La lista propia de Gastos, con la forma del `p-select` de PrimeNG: el
+| control parece un campo, y sus opciones cuelgan del `body`.
+*/
+
+.lista-propia {
+    display: block;
+    padding: 8px 10px;
+    border: 1px solid #c8ccd4;
+    border-radius: 6px;
+    background: #fff;
+    cursor: pointer;
+    min-height: 1.2em;
+}
+
+.lista-propia-opciones {
+    list-style: none;
+    margin: 0;
+    padding: 4px 0;
+    background: #fff;
+    border: 1px solid #c8ccd4;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .15);
+}
+
+.lista-propia-opciones [role="option"] {
+    padding: 6px 12px;
+    cursor: pointer;
+}
+
+.lista-propia-opciones [role="option"]:hover {
+    background: #eef2f8;
+}

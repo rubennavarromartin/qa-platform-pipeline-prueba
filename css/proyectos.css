@@ -1,0 +1,519 @@
+/*
+|--------------------------------------------------------------------------
+| Proyectos
+|--------------------------------------------------------------------------
+|
+| La ficha de un proyecto es un panel, no una lista de datos, así que tiene
+| hoja propia. Ni un color escrito a mano: todo sale de las variables de
+| marca, igual que el resto del laboratorio, y por eso el tema oscuro funciona
+| sin escribir una sola regla más.
+|
+*/
+
+/*
+| El listado
+*/
+
+.celda-avance {
+
+    white-space:nowrap;
+
+}
+
+.avance-numero {
+
+    display:inline-block;
+    min-width:38px;
+
+}
+
+.barra {
+
+    display:block;
+    width:100%;
+    height:8px;
+    margin-top:10px;
+    border-radius:99px;
+    background:var(--superficie-hundida);
+    overflow:hidden;
+
+}
+
+.barra-fina {
+
+    display:inline-block;
+    width:90px;
+    height:6px;
+    margin:0 0 1px 8px;
+    vertical-align:middle;
+
+}
+
+.barra-relleno {
+
+    display:block;
+    height:100%;
+    border-radius:99px;
+    background:var(--marca);
+
+}
+
+/*
+| La ficha: dos columnas, el menú del proyecto y su cuerpo
+*/
+
+.proyecto {
+
+    display:grid;
+    grid-template-columns:200px 1fr;
+    gap:24px;
+    align-items:start;
+
+}
+
+.proyecto-menu {
+
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+
+}
+
+.proyecto-menu-cabecera {
+
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+    margin-bottom:12px;
+    padding:14px;
+    border:1px solid var(--linea);
+    border-radius:var(--radio, 8px);
+    background:var(--superficie-hundida);
+
+}
+
+.proyecto-menu-etiqueta {
+
+    color:var(--tinta-suave);
+    font-size:11px;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+
+}
+
+.proyecto-seccion {
+
+    padding:10px 14px;
+    border:1px solid transparent;
+    border-radius:var(--radio, 8px);
+    background:transparent;
+    color:var(--tinta);
+    font-family:inherit;
+    font-size:14px;
+    text-align:left;
+    cursor:pointer;
+
+}
+
+.proyecto-seccion:hover {
+
+    background:var(--superficie-hundida);
+
+}
+
+.proyecto-seccion[aria-current="page"] {
+
+    border-color:var(--marca-borde);
+    background:var(--marca-suave);
+    color:var(--marca-texto);
+    font-weight:600;
+
+}
+
+.proyecto-cuerpo {
+
+    display:flex;
+    flex-direction:column;
+    gap:24px;
+    min-width:0;
+
+}
+
+.proyecto-cabecera {
+
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:16px;
+
+}
+
+.proyecto-cabecera h1 {
+
+    margin:0 0 6px;
+
+}
+
+.proyecto-subtitulo {
+
+    margin:0;
+    color:var(--tinta-suave);
+    font-size:14px;
+
+}
+
+.proyecto-seccion-panel {
+
+    display:flex;
+    flex-direction:column;
+    gap:24px;
+
+}
+
+/*
+| Las tres tarjetas de arriba
+*/
+
+.proyecto-cifras {
+
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:16px;
+
+}
+
+.tarjeta-cifra {
+
+    padding:18px;
+    border:1px solid var(--linea);
+    border-radius:var(--radio, 8px);
+    background:var(--superficie);
+
+}
+
+.tarjeta-cifra-nombre {
+
+    display:block;
+    margin-bottom:8px;
+    color:var(--tinta-suave);
+    font-size:13px;
+
+}
+
+.tarjeta-cifra-valor {
+
+    display:block;
+    font-size:26px;
+    font-weight:700;
+
+}
+
+/*
+| El tablero de tareas
+*/
+
+.proyecto-dos-columnas {
+
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:24px;
+    align-items:start;
+
+}
+
+.proyecto-subcabecera {
+
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    margin-bottom:12px;
+
+}
+
+.proyecto-subcabecera h2 {
+
+    margin:0;
+    font-size:17px;
+
+}
+
+.proyecto-apunte {
+
+    color:var(--tinta-suave);
+    font-size:13px;
+
+}
+
+.tablero {
+
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:12px;
+    align-items:start;
+
+}
+
+.columna {
+
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    padding:12px;
+    border:1px solid var(--linea);
+    border-radius:var(--radio, 8px);
+    background:var(--superficie-hundida);
+
+}
+
+.columna-cabecera {
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+}
+
+.columna-nombre {
+
+    color:var(--tinta-suave);
+    font-size:13px;
+
+}
+
+.columna-cuenta {
+
+    color:var(--tinta-suave);
+    font-size:13px;
+    font-weight:600;
+
+}
+
+.tarjeta-tarea {
+
+    padding:12px;
+    border:1px solid var(--linea);
+    border-radius:var(--radio, 8px);
+    background:var(--superficie);
+
+}
+
+.tarjeta-tarea h3 {
+
+    margin:0 0 10px;
+    font-size:14px;
+    line-height:1.35;
+
+}
+
+.tarjeta-tarea-pie {
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:8px;
+    margin:0;
+    color:var(--tinta-suave);
+    font-size:12px;
+
+}
+
+.tarjeta-tarea-mover {
+
+    display:flex;
+    gap:4px;
+    margin-top:10px;
+
+}
+
+.btn-mover {
+
+    padding:2px 8px;
+    border:1px solid var(--linea);
+    border-radius:var(--radio-chico, 4px);
+    background:var(--superficie);
+    color:var(--tinta);
+    font-size:13px;
+    line-height:1.4;
+    cursor:pointer;
+
+}
+
+.btn-mover:hover {
+
+    border-color:var(--marca);
+    color:var(--marca-texto);
+
+}
+
+.avatar {
+
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:24px;
+    height:24px;
+    border-radius:99px;
+    background:var(--marca-suave);
+    color:var(--marca-texto);
+    font-size:11px;
+    font-weight:700;
+
+}
+
+/*
+| Documentación y agenda
+*/
+
+.proyecto-panel {
+
+    padding:18px;
+    border:1px solid var(--linea);
+    border-radius:var(--radio, 8px);
+    background:var(--superficie);
+
+}
+
+.proyecto-panel h2 {
+
+    margin:0 0 14px;
+    font-size:17px;
+
+}
+
+.lista-documentos,
+.lista-agenda {
+
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    margin:0;
+    padding:0;
+    list-style:none;
+
+}
+
+.lista-documentos li {
+
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+    padding-bottom:12px;
+    border-bottom:1px solid var(--linea);
+
+}
+
+.lista-documentos li:last-child {
+
+    padding-bottom:0;
+    border-bottom:0;
+
+}
+
+.documento-nombre {
+
+    font-size:14px;
+    font-weight:600;
+
+}
+
+.documento-apunte {
+
+    color:var(--tinta-suave);
+    font-size:12px;
+
+}
+
+.lista-agenda li {
+
+    display:grid;
+    grid-template-columns:70px 1fr;
+    gap:14px;
+    padding-bottom:12px;
+    border-bottom:1px solid var(--linea);
+
+}
+
+.lista-agenda li:last-child {
+
+    padding-bottom:0;
+    border-bottom:0;
+
+}
+
+.cita-cuando,
+.cita-que {
+
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+
+}
+
+.cita-cuando strong {
+
+    font-size:12px;
+    letter-spacing:.04em;
+
+}
+
+.cita-cuando span,
+.cita-que span {
+
+    color:var(--tinta-suave);
+    font-size:12px;
+
+}
+
+/*
+| En pantallas estrechas, todo en una columna: el menú del proyecto arriba.
+*/
+
+@media (max-width: 1100px) {
+
+    .proyecto {
+
+        grid-template-columns:1fr;
+
+    }
+
+    .proyecto-dos-columnas,
+    .proyecto-cifras,
+    .tablero {
+
+        grid-template-columns:1fr;
+
+    }
+
+}
+
+/*
+| Las cifras que además son accesos
+|
+| Se ven igual que las que no lo son: lo que cambia es que se pueden pulsar, y
+| eso se nota al pasar por encima y al llegar con el teclado. Que una tarjeta
+| que lleva a un sitio se distinga de una que no, sin leerla, es lo que hace
+| que se pueda usar.
+*/
+
+.tarjeta-cifra-acceso {
+
+    display:block;
+    width:100%;
+    font-family:inherit;
+    text-align:left;
+    cursor:pointer;
+
+}
+
+.tarjeta-cifra-acceso:hover {
+
+    border-color:var(--marca);
+
+}
+
+.tarjeta-cifra-acceso:focus-visible {
+
+    outline:2px solid var(--marca);
+    outline-offset:2px;
+
+}

@@ -1,0 +1,119 @@
+/*
+|--------------------------------------------------------------------------
+| Acceso
+|--------------------------------------------------------------------------
+|
+| Una sola tarjeta centrada. Los controles vienen de crm.css:
+| aquí sólo está lo que cambia por ser esta pantalla y no otra.
+|
+*/
+
+body.pantallaAcceso {
+
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+
+}
+
+.tarjetaAcceso {
+
+    background:var(--superficie);
+    border:1px solid var(--linea);
+    border-radius:var(--radio);
+    box-shadow:var(--sombra-alta);
+
+    padding:34px 32px;
+    width:100%;
+    max-width:400px;
+
+}
+
+.marcaAcceso {
+
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:22px;
+
+}
+
+.tarjetaAcceso h1 {
+
+    margin:0 0 6px;
+    font-size:21px;
+    font-weight:600;
+
+}
+
+.tarjetaAcceso .ayuda {
+
+    margin:0 0 22px;
+    color:var(--texto-suave);
+    font-size:14px;
+
+}
+
+.tarjetaAcceso label {
+
+    display:block;
+    margin-bottom:6px;
+    font-size:13px;
+    font-weight:600;
+    color:var(--texto);
+
+}
+
+.tarjetaAcceso input {
+
+    width:100%;
+    padding:10px 12px;
+    margin-bottom:18px;
+    font-size:15px;
+
+}
+
+.tarjetaAcceso button {
+
+    width:100%;
+    padding:11px 20px;
+    font-size:15px;
+
+}
+
+.loginError {
+
+    margin:16px 0 0;
+    min-height:20px;
+    color:var(--fallo);
+    font-size:14px;
+
+}
+
+/*
+| El pie con las credenciales del laboratorio. Va apagado y
+| separado: es una nota de banco de pruebas, no parte del
+| formulario.
+*/
+
+.tarjetaAcceso .pie {
+
+    margin:22px 0 0;
+    padding-top:18px;
+    border-top:1px solid var(--linea);
+    font-size:13px;
+
+}
+
+.tarjetaAcceso code {
+
+    background:var(--superficie-hundida);
+    border:1px solid var(--linea);
+    border-radius:4px;
+    padding:1px 5px;
+    font-size:12px;
+    color:var(--tinta);
+
+}

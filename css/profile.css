@@ -1,0 +1,225 @@
+/*
+|--------------------------------------------------------------------------
+| Mi perfil
+|--------------------------------------------------------------------------
+|
+| Lo propio de la ficha del usuario: las secciones en tarjetas y
+| los campos que se abren con un lápiz.
+|
+| Un campo cerrado no se pinta como un campo apagado sino como un
+| dato: sin caja y sin borde. Con caja parecería que se puede
+| escribir en él, y no se puede hasta pulsar el lápiz. Al abrirlo
+| aparece la caja, que es la señal de que ahora sí.
+|
+*/
+
+.perfilQuien {
+
+    margin:-12px 0 22px;
+    color:var(--texto-suave);
+
+}
+
+.tarjeta {
+
+    background:var(--superficie);
+    border:1px solid var(--linea);
+    border-radius:var(--radio);
+    box-shadow:var(--sombra);
+
+    padding:22px 24px;
+    margin-bottom:18px;
+
+    max-width:920px;
+
+}
+
+.tarjeta h2 {
+
+    margin:0 0 18px;
+    font-size:16px;
+    font-weight:600;
+
+}
+
+.campos {
+
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
+    gap:14px 22px;
+
+}
+
+.campo {
+
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+    min-width:0;
+
+}
+
+.campoAncho {
+
+    grid-column:1 / -1;
+
+}
+
+.campo label {
+
+    font-size:12px;
+    font-weight:600;
+    letter-spacing:.03em;
+    text-transform:uppercase;
+    color:var(--texto-suave);
+
+}
+
+.campoValor {
+
+    display:flex;
+    align-items:center;
+    gap:6px;
+
+}
+
+.campoValor input,
+.campoValor select {
+
+    flex:1;
+    min-width:0;
+
+}
+
+/*
+| Un campo cerrado se lee como un dato y no como una caja vacía.
+*/
+
+.campoValor input:read-only,
+.campoValor select:disabled {
+
+    background:transparent;
+    border-color:transparent;
+    padding-left:0;
+    color:var(--tinta);
+
+}
+
+/*
+| Y uno que no se abre nunca, además, en gris: no es que esté
+| cerrado, es que no es de quien lo mira.
+*/
+
+.campoValor input.bloqueado {
+
+    color:var(--texto-suave);
+
+}
+
+/*
+| Abierto: la caja aparece. Es la única señal de que ahora se
+| puede escribir, así que tiene que verse.
+*/
+
+.campoValor input.abierto,
+.campoValor select.abierto {
+
+    background:var(--superficie);
+    border-color:var(--marca-borde);
+    padding-left:10px;
+
+}
+
+.campoValor .apagado {
+
+    color:var(--texto-inerte);
+
+}
+
+/*
+| El lápiz. Se ve al pasar por la sección, como el tirador de las
+| filas: con un icono en cada campo, cuarenta iconos compiten con
+| los datos.
+*/
+
+.lapiz {
+
+    flex:none;
+    width:28px;
+    padding:4px 0;
+
+    background:transparent;
+    border:1px solid transparent;
+    color:var(--texto-inerte);
+
+    font-size:13px;
+    line-height:1;
+
+    opacity:.35;
+    transition:opacity .15s, color .15s;
+
+}
+
+.tarjeta:hover .lapiz,
+.tarjeta:focus-within .lapiz {
+
+    opacity:1;
+
+}
+
+.lapiz:hover:not(:disabled) {
+
+    background:var(--superficie-hundida);
+    border-color:var(--linea);
+    color:var(--marca-texto);
+
+}
+
+.lapiz[hidden] {
+
+    display:none;
+
+}
+
+.casilla {
+
+    display:flex;
+    align-items:center;
+    gap:8px;
+
+    margin-bottom:16px;
+
+    font-size:14px;
+    font-weight:600;
+    color:var(--texto);
+
+}
+
+.casilla input {
+
+    width:16px;
+    height:16px;
+    accent-color:var(--marca);
+
+}
+
+.tarjetaPie {
+
+    display:flex;
+    justify-content:flex-end;
+    margin-top:20px;
+    padding-top:16px;
+    border-top:1px solid var(--linea);
+
+}
+
+/*
+| Quien no puede editar tampoco ve los lápices: no hay nada que
+| abrir.
+*/
+
+body[data-puede-editar="no"] .lapiz {
+
+    display:none;
+
+}

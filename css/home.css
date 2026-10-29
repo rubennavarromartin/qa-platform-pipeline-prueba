@@ -1,0 +1,335 @@
+/*
+|--------------------------------------------------------------------------
+| Entrada
+|--------------------------------------------------------------------------
+|
+| Lo propio de la pantalla de entrada: la cabecera, los
+| indicadores y los accesos a los módulos. El resto lo comparte
+| con las demás.
+|
+*/
+
+.home-header {
+
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:16px;
+    flex-wrap:wrap;
+
+    margin-bottom:28px;
+
+}
+
+.home-header h1 {
+
+    margin-bottom:4px;
+
+}
+
+.home-lema {
+
+    margin:0;
+    color:var(--texto-suave);
+    max-width:46ch;
+
+}
+
+.version {
+
+    background:var(--marca-suave);
+    border:1px solid var(--marca-borde);
+    color:var(--marca-texto);
+
+    padding:4px 12px;
+    border-radius:999px;
+
+    font-size:13px;
+    font-weight:600;
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| Indicadores
+|--------------------------------------------------------------------------
+*/
+
+/*
+| Seis indicadores. En pantalla ancha van de tres en tres y no en
+| una fila de cinco más uno suelto: el que se queda solo parece
+| que sobra.
+*/
+
+.metrics {
+
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(190px, 1fr));
+    gap:16px;
+    margin-bottom:34px;
+
+}
+
+@media (min-width: 900px) {
+
+    .metrics {
+
+        grid-template-columns:repeat(3, minmax(0, 1fr));
+
+    }
+
+}
+
+.metricCard {
+
+    background:var(--superficie);
+    border:1px solid var(--linea);
+    border-radius:var(--radio);
+    box-shadow:var(--sombra);
+    padding:18px 20px;
+
+}
+
+.metricValue {
+
+    font-size:30px;
+    font-weight:700;
+    line-height:1.1;
+    color:var(--tinta);
+    font-variant-numeric:tabular-nums;
+
+}
+
+/* El número sólo se pinta de color cuando dice algo. */
+
+.metricValue.ok    { color:var(--correcto); }
+.metricValue.error { color:var(--fallo); }
+
+.metricTitle {
+
+    margin-top:6px;
+    color:var(--texto);
+    font-size:13px;
+    font-weight:600;
+
+}
+
+.metricHint {
+
+    margin-top:2px;
+    color:var(--texto-suave);
+    font-size:12px;
+    min-height:16px;
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| Últimas acciones
+|--------------------------------------------------------------------------
+|
+| Lo último que ha pasado, sacado del log. Cada línea dice qué se
+| ha hecho, sobre qué, quién y cuándo, en ese orden: es el orden
+| en que se pregunta.
+|
+*/
+
+.seccionCabecera {
+
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:16px;
+    flex-wrap:wrap;
+
+}
+
+.verTodo {
+
+    font-size:13px;
+    font-weight:600;
+    text-decoration:none;
+
+}
+
+.verTodo:hover {
+
+    text-decoration:underline;
+
+}
+
+.acciones {
+
+    list-style:none;
+    margin:0 0 12px;
+    padding:0;
+
+    background:var(--superficie);
+    border:1px solid var(--linea);
+    border-radius:var(--radio);
+    box-shadow:var(--sombra);
+
+    overflow:hidden;
+
+}
+
+.acciones:empty {
+
+    display:none;
+
+}
+
+.accion {
+
+    display:flex;
+    align-items:center;
+    gap:12px;
+
+    padding:11px 16px;
+    border-bottom:1px solid var(--linea);
+
+    font-size:14px;
+
+}
+
+.accion:last-child {
+
+    border-bottom:none;
+
+}
+
+.accion .badge {
+
+    flex:none;
+    min-width:74px;
+    text-align:center;
+
+}
+
+.accionQue {
+
+    flex:1;
+    min-width:0;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    color:var(--texto);
+
+}
+
+.accionQue strong {
+
+    color:var(--tinta);
+    font-weight:600;
+
+}
+
+.accionQuien {
+
+    color:var(--texto-suave);
+    white-space:nowrap;
+
+}
+
+.accionCuando {
+
+    color:var(--texto-inerte);
+    font-variant-numeric:tabular-nums;
+    white-space:nowrap;
+
+}
+
+/*
+| En una pantalla estrecha no caben las cuatro columnas: quién y
+| cuándo se van, que es lo que menos se busca de un vistazo.
+*/
+
+@media (max-width: 700px) {
+
+    .accionQuien,
+    .accionCuando {
+
+        display:none;
+
+    }
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| Módulos
+|--------------------------------------------------------------------------
+*/
+
+.module-grid {
+
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(230px, 1fr));
+    gap:16px;
+    margin-bottom:40px;
+
+}
+
+.module-card {
+
+    background:var(--superficie);
+    border:1px solid var(--linea);
+    border-radius:var(--radio);
+    box-shadow:var(--sombra);
+
+    padding:20px;
+
+    text-decoration:none;
+    color:var(--texto);
+
+    transition:border-color .18s, box-shadow .18s, transform .18s;
+
+}
+
+.module-card:hover {
+
+    border-color:var(--marca-borde);
+    box-shadow:var(--sombra-alta);
+    transform:translateY(-2px);
+
+}
+
+.module-icon {
+
+    font-size:24px;
+    line-height:1;
+    color:var(--marca-texto);
+    margin-bottom:14px;
+
+}
+
+.module-card h3 {
+
+    margin:0 0 4px;
+    font-size:16px;
+    font-weight:600;
+
+}
+
+.module-card p {
+
+    margin:0;
+    font-size:13px;
+    color:var(--texto-suave);
+
+}
+
+.module-card.disabled {
+
+    opacity:.55;
+    cursor:default;
+
+}
+
+.module-card.disabled:hover {
+
+    transform:none;
+    border-color:var(--linea);
+    box-shadow:var(--sombra);
+
+}

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Informes · CRM Laboratory</title>
+
+    <link rel="stylesheet" href="css/marca.css">
+    <link rel="stylesheet" href="css/crm.css">
+
+    <script src="js/entorno.js"></script>
+    <script src="js/tema.js"></script>
+
+    <!--
+    | La hoja de imprimir (16 de octubre de 2026). Aquí y no en crm.css porque
+    | sólo la usa esta pantalla. En pantalla no se ve; al imprimir, es lo único
+    | que sale.
+    -->
+
+    <style>
+        #hojaImpresion { display: none; }
+        @media print {
+            body.imprimiendo > :not(#hojaImpresion) { display: none !important; }
+            body.imprimiendo #hojaImpresion { display: block; }
+        }
+    </style>
+
+</head>
+
+<body data-modulo="informes">
+
+<a class="saltar" href="#contenido">
+    Saltar al contenido
+</a>
+
+<div class="disposicion">
+
+    <aside class="lateral" id="lateral"></aside>
+
+    <main class="principal" id="contenido">
+
+<!--
+|--------------------------------------------------------------------------
+| Informes: una sección que el menú ofrece y nadie anuncia
+|--------------------------------------------------------------------------
+|
+| Montada el 8 de septiembre de 2026, y su única razón de ser es la pregunta
+| que le plantea a la plataforma:
+|
+|     ¿reconoces una sección del menú que no lleva `data-module`?
+|
+| Por qué hacía falta plantearla
+|
+|   Los módulos de una aplicación se descubrían buscando `[data-module]` en la
+|   pantalla de entrada, y ese atributo **sólo lo tiene este laboratorio**
+|   porque se le puso a mano. Medido el 8 de septiembre: el laboratorio, 9
+|   módulos; Bitácora, 0; Bitácora PRO, 0; AUTOSTOCKNUVEX, 0. O sea, ninguna
+|   aplicación de verdad tenía módulos — y sin módulos no hay pruebas de menú
+|   ni agrupación por área de negocio.
+|
+|   Y el propio laboratorio ya lo planteaba sin querer: **cinco de sus catorce
+|   entradas de menú no tienen tarjeta con `data-module`** —Inicio, Cuadro de
+|   mando, Mis cifras, Aprobaciones y Ayuda—, así que la plataforma se perdía
+|   cinco secciones de su propio guardián sin decir nada. Lo que faltaba era
+|   que el caso estuviera **puesto a propósito y escrito**, porque un caso que
+|   existe por descuido se arregla el día que alguien ordena el código.
+|
+| Qué la hace el caso, y no una pantalla más
+|
+|   Está en el menú lateral como las demás y **no tiene tarjeta en la pantalla
+|   de entrada**. No es un olvido: es lo que se está preguntando. Todas las
+|   demás secciones se anuncian dos veces —en el menú y en las tarjetas— y
+|   ésta sólo una.
+|
+| Y trae algo que probar, para que reconocerla sirva de algo
+|
+|   Dos cifras con su nombre al lado, que es lo que la plataforma sabe leer sin
+|   tabla ninguna. Si la sección se reconoce, salen sus pruebas; si no, no sale
+|   nada — y esa diferencia es la medida.
+|
+| Y un botón de Imprimir, que es la segunda pregunta (16 de octubre de 2026)
+|
+|     ¿pulsas Imprimir sin quedarte colgado, y la pantalla vuelve a ser la
+|     que era?
+|
+|   `window.print()` abre el diálogo de impresión del navegador, que no es de
+|   la página: con la ventana a la vista, el clic no vuelve y la página deja
+|   de contestar. Lo vio Rubén en un Build de Meristec, que imprime en todos
+|   sus listados; sin ventana no se nota. Este botón lo hace como Meristec
+|   —monta una hoja aparte al empezar a imprimir y la quita al acabar, con
+|   `beforeprint` y `afterprint`—, así que la respuesta buena tiene dos
+|   mitades: que no se cuelgue, y que al terminar no quede la hoja puesta.
+|
+-->
+
+<div id="vistaListado">
+
+    <h1>Informes</h1>
+
+    <p class="ayuda">
+        Un resumen de lo que hay en el catálogo.
+    </p>
+
+    <div class="indicadores" id="indicadoresInformes"></div>
+
+    <!--
+    | Y dos tarjetas más, hechas como las de SABESP a propósito: un componente
+    | que lleva su rótulo en un atributo —`<lab-indicador titulo="…">`—, un
+    | `<article>` sin nombre accesible dentro, el número con su unidad en su
+    | propio trozo, y **ningún `id`** ni en ellas ni en este bloque. Así son
+    | las 311 tarjetas de SABESP, y hasta el 16 de octubre de 2026 no se
+    | guardaba ninguna: la plataforma sólo sabía señalar una cifra por un
+    | identificador. Las de arriba sí lo llevan, y son el caso que ya se leía.
+    -->
+
+    <div class="indicadores" data-cuadro="cuentas"></div>
+
+    <!--
+    | Y una gráfica pintada como las de SABESP: un `<canvas role="img">` que
+    | dibuja barras con el contexto 2D, como hace Chart.js, **sin figura, sin
+    | tabla equivalente y sin nombre**. Es lo que no se sabe leer —de un lienzo
+    | no se saca ningún dato— y está aquí para que la plataforma diga que lo
+    | hay en lugar de callarse, que es lo que hizo con las 81 de SABESP hasta
+    | el 16 de octubre de 2026. Las gráficas que sí se leen están en el Cuadro
+    | de mando, cada una en su figura con su tabla.
+    -->
+
+    <canvas id="graficaInformes" role="img" width="480" height="160"></canvas>
+
+    <!--
+    | Y un botón que no suena a escribir y escribe, como "Simular migracao" de
+    | SABESP: calcula, y además manda el estudio al servidor para guardarlo en
+    | un historial. Ahí el Discovery lo pulsaba en cada Build para ver qué
+    | hacía y dejaba un estudio guardado cada vez —uno el 14, uno el 15 y uno
+    | el 16 de octubre de 2026—. El laboratorio no tiene servidor que guarde,
+    | así que la petición no llega a ningún sitio; lo que se pregunta es si
+    | sale.
+    -->
+
+    <p>
+        <button type="button" id="simularTrimestre">Simular el trimestre</button>
+    </p>
+
+    <p id="simulacionResultado" role="status"></p>
+
+    <!--
+    | Y un dial, como el `p-knob` de SABESP: un dibujo que dice un número sin
+    | escribirlo suelto. Se declara deslizador (`role="slider"`) y no se deja
+    | mover (`tabindex="-1"`), lleva su valor en `aria-valuenow` y lo pinta
+    | encima —"79%"—, y **no tiene nombre**, como ninguno de los 25 de allí.
+    | Hasta el 19 de octubre de 2026 la plataforma no leía ninguno: lo que se
+    | puede afirmar de él es que lo que dibuja y lo que le dice a quien no lo ve
+    | son el mismo número.
+    -->
+
+    <div class="dial">
+
+        <span class="dial-rotulo">Empresas activas</span>
+
+        <svg class="dial-dibujo" viewBox="0 0 100 100" width="120" height="120"
+             role="slider" tabindex="-1"
+             aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <circle cx="50" cy="50" r="40" fill="none" stroke="#ddd" stroke-width="10"></circle>
+            <circle class="dial-arco" cx="50" cy="50" r="40" fill="none" stroke="#2c6fbb" stroke-width="10"
+                    stroke-dasharray="0 252" transform="rotate(-90 50 50)"></circle>
+            <text class="dial-texto" x="50" y="56" text-anchor="middle" font-size="18">0%</text>
+        </svg>
+
+    </div>
+
+    <p>
+        <button type="button" id="imprimirInforme">Imprimir el resumen</button>
+    </p>
+
+</div>
+
+    </main>
+
+</div>
+
+    <script src="js/companies/companyRepository.js"></script>
+    <!--
+    | Era js/contacts/contactRepository.js, que no ha existido nunca: el
+    | repositorio de contactos vive en contacts.js. Desde el 8 de septiembre
+    | de 2026 el script se paraba en «Contacts is not defined» y la pantalla no
+    | pintaba sus dos cifras. Se vio el 16 de octubre al montar aquí el botón
+    | de Imprimir, que tampoco llegaba a ponerse.
+    -->
+    <script src="js/contacts/contacts.js"></script>
+    <script src="js/users/userRepository.js"></script>
+    <script src="js/roles/roleRepository.js"></script>
+
+    <script src="js/components/toast.js"></script>
+    <script src="js/components/navigation.js"></script>
+    <script src="js/components/session.js"></script>
+    <script src="js/components/permissions.js"></script>
+    <script src="js/components/layout.js"></script>
+
+    <script src="js/informes/app.js"></script>
+
+</body>
+
+</html>

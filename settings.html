@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Configuración · CRM Laboratory</title>
+
+    <link rel="stylesheet" href="css/marca.css">
+    <link rel="stylesheet" href="css/crm.css">
+
+    <!--
+    | El tema se fija antes de pintar nada, para que la página no
+    | aparezca un instante en claro antes de ponerse oscura.
+    -->
+
+    <script src="js/entorno.js"></script>
+    <script src="js/tema.js"></script>
+
+</head>
+
+<body data-modulo="settings">
+
+<a class="saltar" href="#contenido">
+    Saltar al contenido
+</a>
+
+<div class="disposicion">
+
+    <aside class="lateral" id="lateral"></aside>
+
+    <main class="principal" id="contenido">
+
+<!--
+    Los parámetros de la aplicación.
+
+    No es un CRUD: no hay lista, ni alta, ni ficha. Es un
+    formulario que está siempre ahí, con lo que ya hay guardado
+    dentro, y lo que se cambia aquí cambia el comportamiento de
+    otras pantallas —el IVA de los presupuestos, los minutos que
+    ofrece una cita—.
+-->
+
+<div id="vistaListado">
+
+    <h1>Configuración</h1>
+
+    <nav
+        class="pestanas"
+        role="tablist"
+        aria-label="Secciones de la configuración">
+
+        <button
+            id="tabSociedad"
+            type="button"
+            role="tab"
+            aria-controls="panelSociedad"
+            aria-selected="true">
+            Sociedad
+        </button>
+
+        <button
+            id="tabAgenda"
+            type="button"
+            role="tab"
+            aria-controls="panelAgenda"
+            aria-selected="false">
+            Agenda
+        </button>
+
+        <button
+            id="tabPresupuestos"
+            type="button"
+            role="tab"
+            aria-controls="panelPresupuestos"
+            aria-selected="false">
+            Presupuestos
+        </button>
+
+
+        <button
+            id="tabEstados"
+            type="button"
+            role="tab"
+            aria-controls="panelEstados"
+            aria-selected="false">
+            Estados de proyecto
+        </button>
+
+    </nav>
+
+    <section
+        id="panelSociedad"
+        role="tabpanel"
+        aria-labelledby="tabSociedad">
+
+        <form id="societyForm" class="form ajustes">
+
+            <label for="societyName">
+                Razón social
+
+                <input
+                    id="societyName"
+                    name="societyName"
+                    type="text"
+                    required>
+            </label>
+
+            <label for="societyTaxId">
+                CIF
+
+                <input
+                    id="societyTaxId"
+                    name="societyTaxId"
+                    type="text">
+            </label>
+
+            <label for="societyVat">
+                Tipo de IVA (%)
+
+                <input
+                    id="societyVat"
+                    name="societyVat"
+                    type="number"
+                    min="0"
+                    max="100"
+                    step="1"
+                    required>
+            </label>
+
+            <p class="ayudaCampo">
+                Es el IVA que se aplica al calcular el total de un
+                presupuesto. Cambiarlo cambia el total de todos.
+            </p>
+
+            <div class="modal-buttons">
+
+                <button
+                    id="saveSocietyButton"
+                    class="btn-primary"
+                    type="submit">
+                    Guardar
+                </button>
+
+            </div>
+
+        </form>
+
+        <p
+            id="societyAviso"
+            class="aviso"
+            role="status">
+        </p>
+
+    </section>
+
+    <section
+        id="panelAgenda"
+        role="tabpanel"
+        aria-labelledby="tabAgenda"
+        hidden>
+
+        <form id="agendaForm" class="form ajustes">
+
+            <label for="agendaInterval">
+                Minutos que se ofrecen en una cita
+
+                <select
+                    id="agendaInterval"
+                    name="agendaInterval">
+
+                    <option value="1">
+                        Todos, del 00 al 59
+                    </option>
+
+                    <option value="15">
+                        De cuarto en cuarto: 00, 15, 30 y 45
+                    </option>
+
+                    <option value="30">
+                        De media en media: 00 y 30
+                    </option>
+
+                </select>
+            </label>
+
+            <fieldset class="checks">
+
+                <legend>Hora de la cita</legend>
+
+                <label for="agendaTimeRequired">
+
+                    <input
+                        id="agendaTimeRequired"
+                        name="agendaTimeRequired"
+                        type="checkbox">
+
+                    La hora es obligatoria
+
+                </label>
+
+            </fieldset>
+
+            <p class="ayudaCampo">
+                Sin marcar, una cita se puede guardar sin hora: sirve
+                para las que todavía están por concretar.
+            </p>
+
+            <!--
+                El horario de trabajo.
+
+                Manda sobre dos cosas a la vez: sobre lo que
+                enseña el calendario de la Agenda —que sólo pinta
+                los días que se atienden— y sobre lo que se puede
+                guardar, porque una cita fuera del horario no se
+                admite.
+            -->
+
+            <fieldset class="checks">
+
+                <legend>Días que se atiende</legend>
+
+                <label for="agendaDay1">
+                    <input id="agendaDay1" name="agendaDay1" type="checkbox">
+                    Lunes
+                </label>
+
+                <label for="agendaDay2">
+                    <input id="agendaDay2" name="agendaDay2" type="checkbox">
+                    Martes
+                </label>
+
+                <label for="agendaDay3">
+                    <input id="agendaDay3" name="agendaDay3" type="checkbox">
+                    Miércoles
+                </label>
+
+                <label for="agendaDay4">
+                    <input id="agendaDay4" name="agendaDay4" type="checkbox">
+                    Jueves
+                </label>
+
+                <label for="agendaDay5">
+                    <input id="agendaDay5" name="agendaDay5" type="checkbox">
+                    Viernes
+                </label>
+
+                <label for="agendaDay6">
+                    <input id="agendaDay6" name="agendaDay6" type="checkbox">
+                    Sábado
+                </label>
+
+                <label for="agendaDay0">
+                    <input id="agendaDay0" name="agendaDay0" type="checkbox">
+                    Domingo
+                </label>
+
+            </fieldset>
+
+            <div class="franja">
+
+                <label for="agendaFrom">
+                    Desde las
+
+                    <select id="agendaFrom" name="agendaFrom"></select>
+                </label>
+
+                <label for="agendaTo">
+                    Hasta las
+
+                    <select id="agendaTo" name="agendaTo"></select>
+                </label>
+
+            </div>
+
+            <p class="ayudaCampo" id="agendaHorario"></p>
+
+            <div class="modal-buttons">
+
+                <button
+                    id="saveAgendaButton"
+                    class="btn-primary"
+                    type="submit">
+                    Guardar
+                </button>
+
+            </div>
+
+        </form>
+
+        <p
+            id="agendaAviso"
+            class="aviso"
+            role="status">
+        </p>
+
+    </section>
+
+    <!--
+        Presupuestos.
+
+        Tres parámetros que componen el código que se propone al crear un
+        presupuesto: prefijo, ejercicio y contador. El contador es de cada
+        ejercicio, así que al cambiar el año de arriba cambia el número que
+        se enseña abajo: es el caso que ninguna otra pantalla de este
+        laboratorio tenía, un campo cuyo valor depende de otro de la misma
+        pantalla.
+    -->
+
+    <section
+        id="panelPresupuestos"
+        role="tabpanel"
+        aria-labelledby="tabPresupuestos"
+        hidden>
+
+        <form id="quoteCodeForm" class="form ajustes">
+
+            <label for="quotePrefix">
+                Prefijo
+
+                <input
+                    id="quotePrefix"
+                    name="quotePrefix"
+                    type="text"
+                    maxlength="3"
+                    pattern="[A-Za-z0-9]{3}"
+                    required>
+            </label>
+
+            <p class="ayudaCampo">
+                Tres letras o números. Se guarda en mayúsculas.
+            </p>
+
+            <label for="quoteYear">
+                Ejercicio
+
+                <select id="quoteYear" name="quoteYear"></select>
+            </label>
+
+            <label for="quoteCounter">
+                Contador del ejercicio
+
+                <input
+                    id="quoteCounter"
+                    name="quoteCounter"
+                    type="number"
+                    min="0"
+                    step="1"
+                    required>
+            </label>
+
+            <p class="ayudaCampo" id="quoteCounterAyuda"></p>
+
+            <div class="modal-buttons">
+
+                <button
+                    id="saveQuoteCodeButton"
+                    class="btn-primary"
+                    type="submit">
+                    Guardar
+                </button>
+
+            </div>
+
+        </form>
+
+        <p
+            id="presupuestosAviso"
+            class="aviso"
+            role="status">
+        </p>
+
+    </section>
+
+
+    <!--
+    | Los estados de un proyecto
+    |
+    | Es el primer catálogo del laboratorio: una lista corta que se administra
+    | aquí y que **manda sobre otra pantalla**. Lo que se dé de alta aquí
+    | aparece en el desplegable del formulario de un proyecto, y lo que esté en
+    | uso no se puede borrar.
+    |
+    | Para la plataforma es una relación que no tenía: las que había —una
+    | empresa y sus contactos— son de datos que se crean todos los días; ésta
+    | es de las que se tocan una vez y mandan sobre todo lo demás.
+    -->
+
+    <section
+        id="panelEstados"
+        role="tabpanel"
+        aria-labelledby="tabEstados"
+        hidden>
+
+        <div class="toolbar">
+
+            <button
+                id="newStatusButton"
+                class="btn-primary"
+                type="button">
+                Nuevo estado
+            </button>
+
+            <input
+                id="searchStatus"
+                type="text"
+                placeholder="Buscar estado...">
+
+        </div>
+
+        <table id="statusesGrid">
+
+            <thead>
+
+                <tr>
+
+                    <th>Estado</th>
+                    <th>Descripción</th>
+                    <th>Orden</th>
+                    <th>Es final</th>
+                    <th>Proyectos</th>
+                    <th>Acciones</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody></tbody>
+
+        </table>
+
+        <p
+            id="estadosAviso"
+            class="aviso"
+            role="status">
+        </p>
+
+    </section>
+
+</div>
+
+    <div id="modalContainer"></div>
+
+    </main>
+
+</div>
+
+    <script src="js/quotes/codigos.js"></script>
+    <script src="js/quotes/quoteRepository.js"></script>
+    <script src="js/users/userRepository.js"></script>
+    <script src="js/roles/roleRepository.js"></script>
+
+    <script src="js/components/toast.js"></script>
+    <script src="js/components/confirm.js"></script>
+    <script src="js/components/modal.js"></script>
+    <script src="js/components/navigation.js"></script>
+    <script src="js/components/tabs.js"></script>
+    <script src="js/components/session.js"></script>
+    <script src="js/components/permissions.js"></script>
+    <script src="js/components/activityLog.js"></script>
+    <script src="js/components/settings.js"></script>
+    <script src="js/components/layout.js"></script>
+
+    <script src="js/projects/projectStatuses.js"></script>
+    <script src="js/projects/projects.js"></script>
+    <script src="js/settings/estadosDeProyecto.js"></script>
+    <script src="js/settings/app.js"></script>
+
+</body>
+
+</html>

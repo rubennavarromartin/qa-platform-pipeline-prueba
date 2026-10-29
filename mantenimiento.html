@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mantenimiento · CRM Laboratory</title>
+
+    <link rel="stylesheet" href="css/marca.css">
+    <link rel="stylesheet" href="css/crm.css">
+
+    <script src="js/entorno.js"></script>
+    <script src="js/tema.js"></script>
+
+</head>
+
+<body data-modulo="mantenimiento">
+
+<a class="saltar" href="#contenido">
+    Saltar al contenido
+</a>
+
+<div class="disposicion">
+
+    <aside class="lateral" id="lateral"></aside>
+
+    <main class="principal" id="contenido">
+
+<!--
+    Una pantalla detrás de una puerta que hace una pregunta.
+
+    Es el caso de MiPizarra traído a donde se puede medir: su
+    Configuración está detrás de una "puerta del adulto" —una
+    multiplicación escrita en letras— y el Discovery leía la puerta en
+    lugar de la pantalla, el 19 de octubre de 2026. Lo que se pregunta
+    aquí es si la plataforma la pasa, y si las pruebas que salen de lo
+    que hay detrás saben abrirla antes de sus pasos.
+
+    Distinta de la de MiPizarra a propósito, en lo que importa:
+
+    - La respuesta **se escribe en un campo**, no se marca en un
+      teclado de cifras. Una plataforma que sólo supiera pulsar
+      botones de números no pasaría ésta.
+    - La pregunta **no es una cuenta**: cuántas letras tiene una
+      palabra, qué número va después de otro escrito en letras. Ninguna
+      regla escrita para la de MiPizarra la contesta.
+    - Si se falla, **cambia la pregunta**, como allí: probar al azar no
+      la abre.
+
+    Se queda abierta mientras dure la pestaña (sessionStorage), que es
+    lo que hace que cada prueba —que arranca con un navegador limpio—
+    se la encuentre cerrada.
+
+    Detrás, una lista de tareas con su buscador: lo justo para que de la
+    pantalla salgan pruebas que tengan que pasar por la puerta.
+-->
+
+<div id="vistaListado">
+
+    <h1>Mantenimiento</h1>
+
+    <p class="ayuda">
+        Las tareas que se lanzan solas cada noche y cuándo se hicieron por
+        última vez.
+    </p>
+
+    <section id="panelListado">
+
+        <div class="toolbar">
+
+            <div class="toolbar-left">
+
+                <input
+                    id="buscarTarea"
+                    type="search"
+                    placeholder="Buscar tarea"
+                    aria-label="Buscar tarea">
+
+            </div>
+
+        </div>
+
+        <table id="tablaTareas">
+
+            <thead>
+                <tr>
+                    <th>Tarea</th>
+                    <th>Cada</th>
+                    <th>Última vez</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+
+            <tbody></tbody>
+
+        </table>
+
+        <p id="tareasVacio" class="aviso" role="status" hidden>
+            Ninguna tarea se llama así.
+        </p>
+
+    </section>
+
+</div>
+
+    <div id="modalContainer"></div>
+
+    </main>
+
+</div>
+
+    <script src="js/users/userRepository.js"></script>
+    <script src="js/roles/roleRepository.js"></script>
+
+    <script src="js/components/toast.js"></script>
+    <script src="js/components/navigation.js"></script>
+    <script src="js/components/session.js"></script>
+    <script src="js/components/permissions.js"></script>
+    <script src="js/components/layout.js"></script>
+
+    <script src="js/mantenimiento/puerta.js"></script>
+    <script src="js/mantenimiento/app.js"></script>
+
+</body>
+
+</html>

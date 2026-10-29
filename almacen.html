@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Almacén · CRM Laboratory</title>
+
+    <link rel="stylesheet" href="css/marca.css">
+    <link rel="stylesheet" href="css/crm.css">
+
+    <script src="js/entorno.js"></script>
+    <script src="js/tema.js"></script>
+
+</head>
+
+<body data-modulo="almacen">
+
+<a class="saltar" href="#contenido">
+    Saltar al contenido
+</a>
+
+<div class="disposicion">
+
+    <aside class="lateral" id="lateral"></aside>
+
+    <main class="principal" id="contenido">
+
+<!--
+    Pantallas que no tienen dirección propia.
+
+    Es la forma de la facturación de ejemplo, traída a donde se puede
+    medir en cada Build: su cinta abre cada entrada como una ventana
+    dentro de la misma página, como el programa de escritorio que imita,
+    y la dirección no cambia nunca. El Discovery contaba las pantallas
+    por su dirección y de toda la facturación leyó una: 1 pantalla y 5
+    pruebas, el 17 de octubre de 2026.
+
+    Aquí la barra de Almacén abre dos ventanas —Artículos y Ubicaciones—
+    con su pestaña, en un escritorio, y cada una con su tabla y su
+    buscador. Lo que se pregunta es si la plataforma las reconoce como
+    pantallas aunque la dirección siga siendo almacen.html, y si las
+    pruebas que salen de ellas saben llegar: abrir la página y pulsar.
+
+    Nada aquí dice "ventana" de forma que se pueda buscar: se reconocen
+    por lo que aparece al pulsar. Y no se acuerdan de nada al recargar,
+    como la de verdad: cada prueba tiene que volver a abrirlas.
+-->
+
+<h1>Almacén</h1>
+
+<p class="ayuda">
+    Los artículos y dónde están. Cada uno se abre en su ventana.
+</p>
+
+<nav class="toolbar" id="barraAlmacen" aria-label="Almacén">
+
+    <button type="button" class="btn" id="abrirArticulos">Artículos</button>
+
+    <button type="button" class="btn" id="abrirUbicaciones">Ubicaciones</button>
+
+</nav>
+
+<div role="tablist" id="pestanasAlmacen" aria-label="Ventanas abiertas"></div>
+
+<div id="escritorioAlmacen"></div>
+
+    <div id="modalContainer"></div>
+
+    </main>
+
+</div>
+
+    <script src="js/users/userRepository.js"></script>
+    <script src="js/roles/roleRepository.js"></script>
+
+    <script src="js/components/toast.js"></script>
+    <script src="js/components/navigation.js"></script>
+    <script src="js/components/session.js"></script>
+    <script src="js/components/permissions.js"></script>
+    <script src="js/components/layout.js"></script>
+
+    <script src="js/almacen/app.js"></script>
+
+</body>
+
+</html>

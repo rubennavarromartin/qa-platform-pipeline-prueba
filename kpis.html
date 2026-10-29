@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mis cifras · CRM Laboratory</title>
+
+    <link rel="stylesheet" href="css/marca.css">
+    <link rel="stylesheet" href="css/crm.css">
+
+    <script src="js/entorno.js"></script>
+    <script src="js/tema.js"></script>
+
+</head>
+
+<body data-modulo="kpis">
+
+<a class="saltar" href="#contenido">
+    Saltar al contenido
+</a>
+
+<div class="disposicion">
+
+    <aside class="lateral" id="lateral"></aside>
+
+    <main class="principal" id="contenido">
+
+<!--
+    Las cifras de quien ha entrado: su objetivo, lo que lleva
+    cerrado y cómo va.
+
+    Es la segunda pantalla que el usuario con el que se explora no
+    ve —pide el permiso "Objetivos", que el Administrador no
+    tiene— y añade algo que Aprobaciones no tenía: **los datos son
+    distintos según quién entre**. No es que uno vea la pantalla y
+    otro no; es que cada uno ve sus números.
+
+    Para la plataforma son dos preguntas encadenadas. La primera,
+    si llega a verla. Y la segunda, si se da cuenta de que el
+    cumplimiento **sale de las otras dos cifras** que están al
+    lado: es lo mismo que ya sabe deducir de un total y sus
+    líneas, pero aquí sin tabla ninguna.
+
+    Sin listado, sin buscador y sin formulario: cuatro cajas y una
+    barra. La pantalla más pequeña del laboratorio.
+-->
+
+<div id="vistaListado">
+
+    <h1>Mis cifras</h1>
+
+    <p class="ayuda" id="misCifrasDeQuien"></p>
+
+    <div class="indicadores" id="misIndicadores"></div>
+
+    <p
+        id="misCifrasVacio"
+        class="aviso"
+        role="status">
+    </p>
+
+</div>
+
+    <div id="modalContainer"></div>
+
+    </main>
+
+</div>
+
+    <script src="js/users/userRepository.js"></script>
+    <script src="js/roles/roleRepository.js"></script>
+    <script src="js/kpis/kpiRepository.js"></script>
+
+    <script src="js/components/toast.js"></script>
+    <script src="js/components/navigation.js"></script>
+    <script src="js/components/session.js"></script>
+    <script src="js/components/permissions.js"></script>
+    <script src="js/components/layout.js"></script>
+
+    <script src="js/kpis/app.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,335 @@
+/*
+|--------------------------------------------------------------------------
+| Presupuestos
+|--------------------------------------------------------------------------
+|
+| Lo que trae este módulo y no había antes: el conmutador de
+| vistas, el kanban y la tabla de líneas con su totalizador.
+|
+| Los comentarios estaban aquí y se han ido a crm.css, que es la
+| hoja común: los tienen las seis entidades, y aquí sólo los
+| cargaba Presupuestos. En las otras cinco la lista se veía sin
+| formato, que es lo que pasa cuando el estilo de algo compartido
+| vive en la hoja de un módulo.
+|
+| Los colores y las medidas salen de marca.css a través de
+| crm.css, que es la hoja común. Aquí sólo está lo nuevo.
+|
+*/
+
+/* ---------- El conmutador de vistas ---------- */
+
+.vistas {
+
+    display:flex;
+    gap:8px;
+    margin-left:auto;
+
+}
+
+/*
+| La vista que está puesta se marca con `aria-pressed`, no con
+| una clase: el estilo se cuelga del atributo que ya lleva el
+| significado, así no puede haber una vista que se vea activa y
+| no lo esté.
+*/
+
+.btn-vista[aria-pressed="true"] {
+
+    background:var(--marca-suave);
+    border-color:var(--marca-borde);
+    color:var(--tinta);
+    font-weight:600;
+    cursor:default;
+
+}
+
+/* ---------- El kanban ---------- */
+
+.kanban {
+
+    display:grid;
+    grid-template-columns:repeat(5, minmax(180px, 1fr));
+    gap:12px;
+    align-items:start;
+    overflow-x:auto;
+    padding-bottom:8px;
+
+}
+
+.kanban-columna {
+
+    background:var(--superficie-hundida);
+    border:1px solid var(--linea);
+    border-radius:var(--radio);
+    padding:12px;
+    min-height:8rem;
+
+}
+
+.kanban-columna h3 {
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+
+    margin:0 0 12px;
+
+    font-size:13px;
+    font-weight:700;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    color:var(--texto-suave);
+
+}
+
+.kanban-cuenta {
+
+    background:var(--superficie);
+    border:1px solid var(--linea);
+    border-radius:999px;
+    padding:1px 8px;
+    font-size:12px;
+    letter-spacing:0;
+    color:var(--texto-suave);
+
+}
+
+.kanban-lista {
+
+    list-style:none;
+    margin:0;
+    padding:0;
+
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+
+    min-height:3rem;
+
+}
+
+/*
+| La columna que va a recibir la tarjeta se marca mientras se
+| pasa por encima. Sin eso, arrastrar es adivinar dónde va a
+| caer.
+*/
+
+.kanban-lista.kanban-recibe {
+
+    outline:2px dashed var(--marca);
+    outline-offset:4px;
+    border-radius:6px;
+
+}
+
+.kanban-tarjeta {
+
+    background:var(--superficie);
+    border:1px solid var(--linea);
+    border-left:3px solid var(--enlace);
+    border-radius:var(--radio-chico);
+    box-shadow:var(--sombra);
+
+    padding:10px;
+
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+
+    cursor:grab;
+
+}
+
+.kanban-tarjeta.arrastrando {
+
+    opacity:.45;
+
+}
+
+.kanban-codigo {
+
+    font-weight:600;
+    color:var(--tinta);
+
+}
+
+.kanban-empresa {
+
+    font-size:13px;
+    color:var(--texto-suave);
+
+}
+
+.kanban-importe {
+
+    font-size:14px;
+    font-weight:600;
+    color:var(--tinta);
+    font-variant-numeric:tabular-nums;
+
+}
+
+/*
+| Los botones de mover son el camino del teclado, así que tienen
+| que verse y poder pulsarse, no ser un adorno escondido.
+*/
+
+.kanban-mover {
+
+    display:flex;
+    gap:4px;
+    margin-top:6px;
+
+}
+
+.kanban-mover button {
+
+    flex:1;
+    padding:4px 6px;
+    font-size:11px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+
+}
+
+.kanban-vacia {
+
+    margin:0;
+    font-size:13px;
+    color:var(--texto-inerte);
+    font-style:italic;
+
+}
+
+/* ---------- Las líneas y el totalizador ---------- */
+
+.lineas {
+
+    width:100%;
+    border-collapse:collapse;
+    border:none;
+    border-radius:0;
+    box-shadow:none;
+    background:transparent;
+    margin-bottom:16px;
+
+}
+
+.lineas th,
+.lineas td {
+
+    padding:7px 8px;
+    border-bottom:1px solid var(--linea);
+    text-align:left;
+    font-size:13px;
+
+}
+
+.lineas thead {
+
+    background:transparent;
+
+}
+
+.lineas th {
+
+    color:var(--texto-suave);
+
+}
+
+.lineas .importe,
+.lineas .linea-total {
+
+    text-align:right;
+    white-space:nowrap;
+    font-variant-numeric:tabular-nums;
+
+}
+
+.lineas tfoot th {
+
+    text-align:right;
+    font-weight:600;
+    text-transform:none;
+    letter-spacing:0;
+    font-size:13px;
+    color:var(--texto-suave);
+
+}
+
+/*
+| El total del presupuesto se separa de los escalones que lo
+| producen: es el número que alguien va a leer primero.
+*/
+
+.lineas tfoot tr.total th,
+.lineas tfoot tr.total td {
+
+    border-top:2px solid var(--linea-fuerte);
+    font-weight:700;
+    color:var(--tinta);
+    font-size:15px;
+
+}
+
+.linea-descripcion {
+
+    width:100%;
+    min-width:10rem;
+
+}
+
+.linea-numero {
+
+    width:6rem;
+    text-align:right;
+
+}
+
+.btn-linea-delete {
+
+    padding:4px 8px;
+    font-size:13px;
+
+}
+
+.totales {
+
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:5px 16px;
+    margin:0;
+    max-width:24rem;
+
+}
+
+.totales dt {
+
+    color:var(--texto-suave);
+    font-size:14px;
+
+}
+
+.totales dd {
+
+    margin:0;
+    text-align:right;
+    font-variant-numeric:tabular-nums;
+    font-size:14px;
+    color:var(--tinta);
+
+}
+
+.totales dt.total,
+.totales dd.total {
+
+    border-top:2px solid var(--linea-fuerte);
+    padding-top:5px;
+    font-weight:700;
+    color:var(--tinta);
+    font-size:16px;
+
+}

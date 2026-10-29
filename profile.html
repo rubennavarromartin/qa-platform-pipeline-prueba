@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mi perfil · CRM Laboratory</title>
+
+    <link rel="stylesheet" href="css/marca.css">
+    <link rel="stylesheet" href="css/crm.css">
+    <link rel="stylesheet" href="css/profile.css">
+
+    <!--
+    | El tema se fija antes de pintar nada, para que la página no
+    | aparezca un instante en claro antes de ponerse oscura.
+    -->
+
+    <script src="js/entorno.js"></script>
+    <script src="js/tema.js"></script>
+
+</head>
+
+<body data-modulo="profile">
+
+<a class="saltar" href="#contenido">
+    Saltar al contenido
+</a>
+
+<div class="disposicion">
+
+    <aside class="lateral" id="lateral"></aside>
+
+    <main class="principal" id="contenido">
+
+<!--
+    La ficha del propio usuario.
+
+    Es la primera pantalla del laboratorio que no es un CRUD: no
+    tiene rejilla, ni alta, ni borrado. Es un registro único
+    repartido en secciones, con unos campos que se pueden cambiar
+    y otros que no, y cada sección se guarda por su cuenta.
+
+    Lo que plantea, por orden de dificultad:
+
+      Secciones. Los campos no son una lista plana: pertenecen a
+      un grupo que tiene nombre. Y hay dos —Dirección y Dirección
+      de envío— con los campos llamados igual: "Ciudad" aparece
+      dos veces y sólo el grupo las distingue.
+
+      Campos que se abren con un lápiz. Empiezan de sólo lectura
+      y hay que pulsar el icono para poder escribir. Rellenarlos
+      sin pulsarlo no cambia nada.
+
+      Campos que no se abren nunca. El identificador, el correo
+      corporativo, la categoría, el alta y el convenio. No los
+      pone quien los mira, y al guardar se reponen: no es un
+      `readonly` que se pueda quitar tocando el HTML.
+
+      Una casilla que manda sobre otra sección. Con "la misma
+      dirección" marcada, los cinco campos del envío se apagan y
+      valen los de arriba.
+-->
+
+<div id="vistaListado">
+
+    <h1>Mi perfil</h1>
+
+    <p class="perfilQuien" id="profileWho"></p>
+
+    <p
+        id="profileAviso"
+        class="aviso"
+        role="status">
+    </p>
+
+    <!--
+    |------------------------------------------------------------
+    | Datos personales
+    |------------------------------------------------------------
+    -->
+
+    <section class="tarjeta" aria-labelledby="tituloPersonales">
+
+        <h2 id="tituloPersonales">Datos personales</h2>
+
+        <div class="campos">
+
+            <div class="campo">
+
+                <label for="profileId">Identificador</label>
+
+                <div class="campoValor">
+                    <input id="profileId" type="text" readonly class="bloqueado">
+                </div>
+
+            </div>
+
+            <div class="campo">
+
+                <label for="profileName">Nombre</label>
+
+                <div class="campoValor">
+                    <input id="profileName" type="text" readonly>
+                    <button
+                        class="lapiz"
+                        type="button"
+                        data-abre="profileName"
+                        aria-label="Editar Nombre"
+                        title="Editar Nombre">✎</button>
+                </div>
+
+            </div>
+
+            <div class="campo">
+
+                <label for="profileSurname">Apellidos</label>
+
+                <div class="campoValor">
+                    <input id="profileSurname" type="text" readonly>
+                    <button
+                        class="lapiz"
+                        type="button"
+                        data-abre="profileSurname"
+                        aria-label="Editar Apellidos"
+                        title="Editar Apellidos">✎</button>
+                </div>
+
+            </div>
+
+            <div class="campo">
+
+                <label for="profilePhone">Teléfono de contacto</label>
+
+                <div class="campoValor">
+                    <input id="profilePhone" type="tel" readonly>
+                    <button
+                        class="lapiz"
+                        type="button"
+                        data-abre="profilePhone"
+                        aria-label="Editar Teléfono de contacto"
+                        title="Editar Teléfono de contacto">✎</button>
+                </div>
+
+            </div>
+
+            <div class="campo">
+
+                <label for="profileWorkPhone">Teléfono corporativo</label>
+
+                <div class="campoValor">
+                    <input id="profileWorkPhone" type="tel" readonly class="bloqueado">
+                </div>
+
+            </div>
+
+            <div class="campo">
+
+                <label for="profileEmail">Email personal</label>
+
+                <div class="campoValor">
+                    <input id="profileEmail" type="email" readonly>
+                    <button
+                        class="lapiz"
+                        type="button"
+                        data-abre="profileEmail"
+                        aria-label="Editar Email personal"
+                        title="Editar Email personal">✎</button>
+                </div>
+
+            </div>
+
+            <div class="campo">
+
+                <label for="profileWorkEmail">Email corporativo</label>
+
+                <div class="campoValor">
+                    <input id="profileWorkEmail" type="email" readonly class="bloqueado">
+                </div>
+
+            </div>
+
+            <div class="campo">
+
+                <label for="profileAccount">Número de cuenta</label>
+
+                <div class="campoValor">
+                    <input id="profileAccount" type="text" readonly>
+                    <button
+                        class="lapiz"
+                        type="button"
+                        data-abre="profileAccount"
+                        aria-label="Editar Número de cuenta"
+                        title="Editar Número de cuenta">✎</button>
+                </div>
+
+            </div>
+
+            <div class="campo">
+
+                <label for="profileSwift">SWIFT / BIC</label>
+
+                <div class="campoValor">
+                    <input id="profileSwift" type="text" readonly>
+                    <button
+                        class="lapiz"
+                        type="button"
+                        data-abre="profileSwift"
+                        aria-label="Editar SWIFT / BIC"
+                        title="Editar SWIFT / BIC">✎</button>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="tarjetaPie">
+
+            <button
+                id="savePersonalButton"
+                class="btn-primary"
+                type="button">
+                Guardar datos personales
+            </button>
+
+        </div>
+
+    </section>
+
+    <!--
+    |------------------------------------------------------------
+    | Puesto
+    |------------------------------------------------------------
+    -->
+
+    <section class="tarjeta" aria-labelledby="tituloPuesto">
+
+        <h2 id="tituloPuesto">Puesto</h2>
+
+        <div class="campos">
+
+            <div class="campo">
+
+                <label for="profileCategory">Categoría</label>
+
+                <div class="campoValor">
+                    <input id="profileCategory" type="text" readonly class="bloqueado">
+                </div>
+
+            </div>
+
+            <div class="campo">
+
+                <label for="profileOffice">Oficina</label>
+
+                <div class="campoValor">
+                    <select id="profileOffice" disabled></select>
+                    <button
+                        class="lapiz"
+                        type="button"
+                        data-abre="profileOffice"
+                        aria-label="Editar Oficina"
+                        title="Editar Oficina">✎</button>
+                </div>
+
+            </div>
+
+            <div class="campo">
+
+                <label for="profileHours">Horas semanales</label>
+
+                <div class="campoValor">
+                    <input id="profileHours" type="number" min="1" max="40" readonly>
+                    <button
+                        class="lapiz"
+                        type="button"
+                        data-abre="profileHours"
+                        aria-label="Editar Horas semanales"
+                        title="Editar Horas semanales">✎</button>
+                </div>
+
+            </div>
+
+            <div class="campo">
+
+                <label for="profileHired">Fecha de contratación</label>
+
+                <div class="campoValor">
+                    <input id="profileHired" type="date" readonly class="bloqueado">
+                </div>
+
+            </div>
+
+            <div class="campo">
+
+                <label for="profileAgreement">Convenio colectivo</label>
+
+                <div class="campoValor">
+                    <input id="profileAgreement" type="text" readonly class="bloqueado">
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="tarjetaPie">
+
+            <button
+                id="saveJobButton"
+                class="btn-primary"
+                type="button">
+                Guardar puesto
+            </button>
+
+        </div>
+
+    </section>
+
+    <!--
+    |------------------------------------------------------------
+    | Dirección
+    |------------------------------------------------------------
+    -->
+
+    <section class="tarjeta" aria-labelledby="tituloDireccion">
+
+        <h2 id="tituloDireccion">Dirección</h2>
+
+        <div class="campos">
+
+            <div class="campo">
+
+                <label for="profileCity">Ciudad</label>
+
+                <div class="campoValor">
+                    <select id="profileCity" disabled></select>
+                    <button
+                        class="lapiz"
+                        type="button"
+                        data-abre="profileCity"
+                        aria-label="Editar Ciudad"
+                        title="Editar Ciudad">✎</button>
+                </div>
+
+            </div>
+
+            <div class="campo">
+
+                <label for="profileRegion">Región</label>
+
+                <div class="campoValor">
+                    <input id="profileRegion" type="text" readonly>
+                    <button
+                        class="lapiz"
+                        type="button"
+                        data-abre="profileRegion"
+                        aria-label="Editar Región"
+                        title="Editar Región">✎</button>
+                </div>
+
+            </div>
+
+            <div class="campo">
+
+                <label for="profileCountry">País</label>
+
+                <div class="campoValor">
+                    <input id="profileCountry" type="text" readonly>
+                    <button
+                        class="lapiz"
+                        type="button"
+                        data-abre="profileCountry"
+                        aria-label="Editar País"
+                        title="Editar País">✎</button>
+                </div>
+
+            </div>
+
+            <div class="campo">
+
+                <label for="profilePostalCode">Código postal</label>
+
+                <div class="campoValor">
+                    <input id="profilePostalCode" type="text" readonly>
+                    <button
+                        class="lapiz"
+                        type="button"
+                        data-abre="profilePostalCode"
+                        aria-label="Editar Código postal"
+                        title="Editar Código postal">✎</button>
+                </div>
+
+            </div>
+
+            <div class="campo campoAncho">
+
+                <label for="profileStreet">Dirección</label>
+
+                <div class="campoValor">
+                    <input id="profileStreet" type="text" readonly>
+                    <button
+                        class="lapiz"
+                        type="button"
+                        data-abre="profileStreet"
+                        aria-label="Editar Dirección"
+                        title="Editar Dirección">✎</button>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="tarjetaPie">
+
+            <button
+                id="saveAddressButton"
+                class="btn-primary"
+                type="button">
+                Guardar dirección
+            </button>
+
+        </div>
+
+    </section>
+
+    <!--
+    |------------------------------------------------------------
+    | Dirección de envío
+    |------------------------------------------------------------
+    |
+    | Los mismos cinco campos, llamados igual. Los distingue la
+    | sección, y nada más.
+    -->
+
+    <section class="tarjeta" aria-labelledby="tituloEnvio">
+
+        <h2 id="tituloEnvio">Dirección de envío</h2>
+
+        <label class="casilla" for="shippingSame">
+
+            <input id="shippingSame" type="checkbox">
+
+            Usar la misma dirección
+
+        </label>
+
+        <div class="campos">
+
+            <div class="campo">
+
+                <label for="shippingCity">Ciudad</label>
+
+                <div class="campoValor">
+                    <select id="shippingCity" disabled></select>
+                    <button
+                        class="lapiz"
+                        type="button"
+                        data-abre="shippingCity"
+                        aria-label="Editar Ciudad de envío"
+                        title="Editar Ciudad de envío">✎</button>
+                </div>
+
+            </div>
+
+            <div class="campo">
+
+                <label for="shippingRegion">Región</label>
+
+                <div class="campoValor">
+                    <input id="shippingRegion" type="text" readonly>
+                    <button
+                        class="lapiz"
+                        type="button"
+                        data-abre="shippingRegion"
+                        aria-label="Editar Región de envío"
+                        title="Editar Región de envío">✎</button>
+                </div>
+
+            </div>
+
+            <div class="campo">
+
+                <label for="shippingCountry">País</label>
+
+                <div class="campoValor">
+                    <input id="shippingCountry" type="text" readonly>
+                    <button
+                        class="lapiz"
+                        type="button"
+                        data-abre="shippingCountry"
+                        aria-label="Editar País de envío"
+                        title="Editar País de envío">✎</button>
+                </div>
+
+            </div>
+
+            <div class="campo">
+
+                <label for="shippingPostalCode">Código postal</label>
+
+                <div class="campoValor">
+                    <input id="shippingPostalCode" type="text" readonly>
+                    <button
+                        class="lapiz"
+                        type="button"
+                        data-abre="shippingPostalCode"
+                        aria-label="Editar Código postal de envío"
+                        title="Editar Código postal de envío">✎</button>
+                </div>
+
+            </div>
+
+            <div class="campo campoAncho">
+
+                <label for="shippingStreet">Dirección</label>
+
+                <div class="campoValor">
+                    <input id="shippingStreet" type="text" readonly>
+                    <button
+                        class="lapiz"
+                        type="button"
+                        data-abre="shippingStreet"
+                        aria-label="Editar Dirección de envío"
+                        title="Editar Dirección de envío">✎</button>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="tarjetaPie">
+
+            <button
+                id="saveShippingButton"
+                class="btn-primary"
+                type="button">
+                Guardar dirección de envío
+            </button>
+
+        </div>
+
+    </section>
+
+    <!--
+    |------------------------------------------------------------
+    | Responsable
+    |------------------------------------------------------------
+    |
+    | Una sección entera que no se toca, y que apunta a otro
+    | registro: es un dato de sólo lectura que además es una
+    | relación.
+    -->
+
+    <section class="tarjeta" aria-labelledby="tituloResponsable">
+
+        <h2 id="tituloResponsable">Responsable</h2>
+
+        <dl id="profileManager" class="datos"></dl>
+
+    </section>
+
+</div>
+
+    <div id="modalContainer"></div>
+
+    </main>
+
+</div>
+
+    <script src="js/users/userRepository.js"></script>
+    <script src="js/roles/roleRepository.js"></script>
+
+    <script src="js/components/toast.js"></script>
+    <script src="js/components/confirm.js"></script>
+    <script src="js/components/modal.js"></script>
+    <script src="js/components/navigation.js"></script>
+    <script src="js/components/session.js"></script>
+    <script src="js/components/permissions.js"></script>
+    <script src="js/components/settings.js"></script>
+    <script src="js/components/activityLog.js"></script>
+    <script src="js/components/detail.js"></script>
+    <script src="js/components/layout.js"></script>
+
+    <script src="js/profile/profileRepository.js"></script>
+    <script src="js/profile/app.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sin permiso · CRM Laboratory</title>
+
+    <link rel="stylesheet" href="css/marca.css">
+    <link rel="stylesheet" href="css/crm.css">
+
+    <script src="js/entorno.js"></script>
+    <script src="js/tema.js"></script>
+
+</head>
+
+<body data-modulo="sinPermiso" data-title="Sin permiso">
+
+<a class="saltar" href="#contenido">
+    Saltar al contenido
+</a>
+
+<div class="disposicion">
+
+    <aside class="lateral" id="lateral"></aside>
+
+    <main class="principal" id="contenido">
+
+<!--
+    La pantalla que sale cuando alguien pide algo a lo que no
+    tiene derecho.
+
+    Existe porque esconder un botón no es impedir una acción, y
+    esconder una entrada del menú no es impedir una pantalla:
+    quien escriba la dirección a mano llega igual. Las pantallas
+    de administración del laboratorio comprueban el permiso al
+    montarse y traen aquí a quien no lo tenga.
+
+    Lleva el menú y la marca de la aplicación a propósito: una
+    pantalla de error que se sale del sitio se lee como una
+    caída, y esto no es una caída. Es la aplicación diciendo
+    que no.
+-->
+
+<div id="vistaListado" class="sinPermiso" role="alert">
+
+    <p class="sinPermisoCodigo">403</p>
+
+    <h1>No tienes permiso para ver esta pantalla</h1>
+
+    <p id="sinPermisoDetalle" class="muted"></p>
+
+    <button type="button" class="secondary" id="volverAlInicioButton">
+        Volver al inicio
+    </button>
+
+</div>
+
+    <div id="modalContainer"></div>
+
+    </main>
+
+</div>
+
+    <script src="js/users/userRepository.js"></script>
+    <script src="js/roles/roleRepository.js"></script>
+
+    <script src="js/components/toast.js"></script>
+    <script src="js/components/navigation.js"></script>
+    <script src="js/components/session.js"></script>
+    <script src="js/components/permissions.js"></script>
+    <script src="js/components/layout.js"></script>
+
+    <script src="js/sinPermiso/app.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Presupuestos · CRM Laboratory</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="css/marca.css">
+    <link rel="stylesheet" href="css/crm.css">
+    <link rel="stylesheet" href="css/quotes.css">
+
+    <!--
+    | El tema se fija antes de pintar nada, para que la página no
+    | aparezca un instante en claro antes de ponerse oscura.
+    -->
+
+    <script src="js/entorno.js"></script>
+    <script src="js/tema.js"></script>
+
+</head>
+
+<body data-modulo="quotes">
+
+<a class="saltar" href="#contenido">
+    Saltar al contenido
+</a>
+
+<div class="disposicion">
+
+    <aside class="lateral" id="lateral"></aside>
+
+    <main class="principal" id="contenido">
+
+<!--
+    Dos vistas en el mismo fichero, y la dirección decide cuál:
+
+        quotes.html          el listado
+        quotes.html?id=2     la ficha de un presupuesto
+
+    Y dentro del listado, otras dos vistas de los mismos datos: el
+    kanban y la tabla. La pantalla **abre en kanban** a propósito.
+
+    Eso es lo que la plataforma no sabe ver hoy: explora la vista que
+    está puesta, no encuentra ninguna tabla a la vista, y da la
+    pantalla por no tener rejilla. La tabla está en el HTML, con sus
+    columnas y sus botones, pero escondida — igual que en el portal
+    del empleado, que abre en kanban y ofrece "Vista de tabla" en un
+    botón.
+
+    No hay ningún atributo que lo delate. Ponerlo sería que el
+    laboratorio resolviera el problema en lugar de plantearlo.
+-->
+
+<div id="vistaListado">
+
+    <h1>Presupuestos</h1>
+
+    <section id="panelListado">
+
+        <div class="toolbar">
+
+            <button
+                id="newQuoteButton"
+                class="btn-primary">
+                Nuevo presupuesto
+            </button>
+
+            <input
+                id="search"
+                type="text"
+                placeholder="Buscar presupuesto...">
+
+            <div
+                class="vistas"
+                role="group"
+                aria-label="Cómo se ven los presupuestos">
+
+                <button
+                    id="vistaKanbanButton"
+                    class="btn-vista"
+                    type="button"
+                    aria-pressed="true">
+                    Vista kanban
+                </button>
+
+                <button
+                    id="vistaTablaButton"
+                    class="btn-vista"
+                    type="button"
+                    aria-pressed="false">
+                    Vista de tabla
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- LA VISTA KANBAN, que es la que se abre -->
+
+        <div id="vistaKanban">
+
+            <div
+                id="kanban"
+                class="kanban">
+            </div>
+
+        </div>
+
+        <!-- LA VISTA DE TABLA, escondida hasta que se pida -->
+
+        <div id="vistaTabla" hidden>
+
+            <table id="quotesGrid">
+
+                <thead>
+
+                    <tr>
+
+                        <th class="columna-seleccion">
+                            <input
+                                type="checkbox"
+                                id="seleccionTodo"
+                                aria-label="Seleccionar todo lo que se ve">
+                        </th>
+                        <th>Código</th>
+                        <th>Empresa</th>
+                        <th>Fecha</th>
+                        <th>Estado</th>
+                        <th>Total</th>
+                        <th>Acciones</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                </tbody>
+
+            </table>
+
+            <div class="seleccion-barra">
+
+                <span id="seleccionEstado" role="status"></span>
+
+                <button
+                    id="borrarSeleccionButton"
+                    class="btn-delete"
+                    type="button"
+                    disabled>
+                    🗑 Eliminar seleccionados
+                </button>
+
+            </div>
+
+            <div id="paginacion"></div>
+
+        </div>
+
+    </section>
+
+</div>
+
+<!-- LA FICHA DE UN PRESUPUESTO -->
+
+<div id="vistaFicha" hidden>
+
+    <nav class="migas">
+
+        <a
+            id="fichaVolver"
+            class="btn-volver"
+            href="quotes.html">
+            ← Presupuestos
+        </a>
+
+    </nav>
+
+    <h1 id="fichaTitulo"></h1>
+
+    <p
+        id="fichaNoExiste"
+        class="aviso error"
+        role="status"
+        hidden>
+    </p>
+
+    <nav
+        class="pestanas"
+        role="tablist"
+        aria-label="Secciones de la ficha">
+
+        <button
+            id="fichaTabDatos"
+            type="button"
+            role="tab"
+            aria-controls="fichaPanelDatos"
+            aria-selected="true">
+            Datos
+        </button>
+
+        <button
+            id="fichaTabLineas"
+            type="button"
+            role="tab"
+            aria-controls="fichaPanelLineas"
+            aria-selected="false">
+            Líneas
+        </button>
+
+        <button
+            id="fichaTabCitas"
+            type="button"
+            role="tab"
+            aria-controls="fichaPanelCitas"
+            aria-selected="false">
+            Citas
+        </button>
+
+        <button
+            id="tabDocumentacion"
+            type="button"
+            role="tab"
+            aria-controls="panelDocumentacion"
+            aria-selected="false">
+            Documentación
+        </button>
+
+        <button
+            id="tabComentarios"
+            type="button"
+            role="tab"
+            aria-controls="panelComentarios"
+            aria-selected="false">
+            Comentarios
+        </button>
+
+    </nav>
+
+    <section
+        id="fichaPanelDatos"
+        role="tabpanel"
+        aria-labelledby="fichaTabDatos">
+
+        <div class="toolbar">
+
+            <button
+                id="fichaEditarButton"
+                class="btn-primary"
+                type="button"
+                hidden>
+                Editar
+            </button>
+
+        </div>
+
+        <dl id="fichaDatos" class="datos"></dl>
+
+    </section>
+
+    <section
+        id="fichaPanelLineas"
+        role="tabpanel"
+        aria-labelledby="fichaTabLineas"
+        hidden>
+
+        <h2 id="fichaLineasTitulo">Líneas y totales</h2>
+
+        <p
+            id="fichaLineasVacio"
+            class="aviso"
+            role="status">
+        </p>
+
+        <table id="fichaLineasGrid" class="lineas" hidden>
+
+            <thead>
+
+                <tr>
+                    <th>Descripción</th>
+                    <th>Unidades</th>
+                    <th>Importe unitario</th>
+                    <th>Descuento</th>
+                    <th>Total línea</th>
+                </tr>
+
+            </thead>
+
+            <tbody id="fichaLineasBody">
+            </tbody>
+
+            <tfoot id="fichaLineasPie">
+            </tfoot>
+
+        </table>
+
+    </section>
+
+    <section
+        id="fichaPanelCitas"
+        role="tabpanel"
+        aria-labelledby="fichaTabCitas"
+        hidden>
+
+        <h2 id="fichaCitasTitulo">Citas</h2>
+
+        <!--
+            El alta de una cita desde aquí.
+
+            Es la primera vez que se da de alta un registro desde
+            la ficha de otro, y con parte del formulario ya
+            rellena: la cita nace con este presupuesto y con su
+            empresa puestos, que es lo que se sabe sin
+            preguntarlo.
+        -->
+
+        <div class="toolbar">
+
+            <button
+                id="nuevaCitaButton"
+                class="btn-primary"
+                type="button">
+                Nueva cita
+            </button>
+
+        </div>
+
+        <p
+            id="fichaCitasVacio"
+            class="aviso"
+            role="status">
+        </p>
+
+        <table id="fichaCitasGrid" hidden>
+
+            <thead>
+                <tr id="fichaCitasCabecera"></tr>
+            </thead>
+
+            <tbody>
+            </tbody>
+
+        </table>
+
+    </section>
+
+    <section
+        id="panelDocumentacion"
+        role="tabpanel"
+        aria-labelledby="tabDocumentacion"
+        hidden>
+
+        <div class="toolbar">
+
+            <div class="subida">
+
+                <label for="documentFile">
+                    Fichero
+                </label>
+
+                <!--
+                | Qué tipos admite, declarado donde una máquina puede
+                | leerlo.
+                |
+                | `accept` no impide nada: es una ayuda para el cuadro de
+                | elegir fichero, y cualquiera que arrastre uno o use una
+                | herramienta se lo salta. Por eso la comprobación de verdad
+                | está en el código que sube — las dos cosas hacen falta, y
+                | tener sólo la primera es el fallo que la plataforma viene a
+                | cazar.
+                -->
+
+                <input
+                    id="documentFile"
+                    type="file"
+                    accept=".pdf,.png,.jpg,.jpeg,.txt">
+
+                <button
+                    id="uploadDocumentButton"
+                    class="btn-primary"
+                    type="button">
+                    Subir documento
+                </button>
+
+            </div>
+
+        </div>
+
+        <p
+            id="documentAviso"
+            class="aviso"
+            role="status">
+        </p>
+
+        <table id="documentsGrid">
+
+            <thead>
+
+                <tr>
+
+                    <th class="columna-tirador"><span class="soloLectores">Orden</span></th>
+
+                    <th>Documento</th>
+                    <th>Tipo</th>
+                    <th>Tamaño</th>
+                    <th>Subido</th>
+                    <th>Acciones</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            </tbody>
+
+        </table>
+
+    </section>
+
+    <!--#include comentarios-->
+    <section
+        id="panelComentarios"
+        role="tabpanel"
+        aria-labelledby="tabComentarios"
+        hidden>
+
+        <div class="comentario-nuevo">
+
+            <textarea
+                id="commentText"
+                rows="6"
+                aria-label="Comentario"
+                placeholder="Escribe un comentario..."></textarea>
+
+            <button
+                id="addCommentButton"
+                class="btn-primary"
+                type="button">
+                Comentar
+            </button>
+
+        </div>
+
+        <p
+            id="commentAviso"
+            class="aviso"
+            role="status">
+        </p>
+
+        <div class="toolbar">
+
+            <input
+                id="commentFilter"
+                type="text"
+                placeholder="Filtrar comentarios...">
+
+            <label for="commentOrder">
+                Ordenar por
+            </label>
+
+            <select id="commentOrder">
+                <option value="puestos">Como están puestos</option>
+                <option value="fecha">Fecha</option>
+                <option value="usuario">Usuario</option>
+            </select>
+
+            <label for="commentDirection">
+                Sentido
+            </label>
+
+            <select id="commentDirection">
+                <option value="asc">Ascendente</option>
+                <option value="desc">Descendente</option>
+            </select>
+
+        </div>
+
+        <p
+            id="commentsMoverNota"
+            class="aviso"
+            role="status"
+            hidden>
+            Con un orden puesto los comentarios no se pueden mover.
+            Vuelve a "Como están puestos" para colocarlos a mano.
+        </p>
+
+        <ul
+            id="commentsList"
+            class="comentarios">
+        </ul>
+
+        <p
+            id="commentsVacio"
+            class="aviso"
+            role="status">
+        </p>
+
+    </section>
+    <!--/include-->
+
+</div>
+
+    <div id="modalContainer"></div>
+
+    </main>
+
+</div>
+
+    <script src="js/quotes/codigos.js"></script>
+    <script src="js/quotes/quoteRepository.js"></script>
+    <script src="js/companies/companyRepository.js"></script>
+    <script src="js/contacts/contacts.js"></script>
+    <script src="js/users/userRepository.js"></script>
+    <script src="js/roles/roleRepository.js"></script>
+    <script src="js/agenda/appointmentRepository.js"></script>
+
+    <script src="js/components/toast.js"></script>
+    <script src="js/components/confirm.js"></script>
+    <script src="js/components/dataTable.js"></script>
+    <script src="js/components/badge.js"></script>
+    <script src="js/components/modal.js"></script>
+    <script src="js/components/navigation.js"></script>
+    <script src="js/components/tabs.js"></script>
+    <script src="js/components/detail.js"></script>
+    <script src="js/components/relations.js"></script>
+    <script src="js/components/relatedTable.js"></script>
+    <script src="js/components/wizard.js"></script>
+    <script src="js/components/autocomplete.js"></script>
+    <script src="js/components/documents.js"></script>
+    <script src="js/components/session.js"></script>
+    <script src="js/components/permissions.js"></script>
+    <script src="js/components/settings.js"></script>
+    <script src="js/components/orden.js"></script>
+    <script src="js/components/activityLog.js"></script>
+    <script src="js/components/comments.js"></script>
+    <script src="js/components/sortable.js"></script>
+    <script src="js/components/selection.js"></script>
+    <script src="js/components/pagination.js"></script>
+    <script src="js/components/views.js"></script>
+    <script src="js/components/kanban.js"></script>
+    <script src="js/components/layout.js"></script>
+    <script src="js/components/crudPage.js"></script>
+
+    <!--
+    | El formulario de la Agenda, para poder concertar una cita
+    | desde la ficha de un presupuesto sin cambiar de pantalla.
+    -->
+
+    <script src="js/agenda/appointmentForm.js"></script>
+
+    <script src="js/quotes/quoteDetail.js"></script>
+    <script src="js/quotes/quoteUI.js"></script>
+    <script src="js/quotes/quoteForm.js"></script>
+    <script src="js/quotes/app.js"></script>
+
+</body>
+
+</html>

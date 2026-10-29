@@ -1,0 +1,232 @@
+/*
+|--------------------------------------------------------------------------
+| Marca
+|--------------------------------------------------------------------------
+|
+| El color, la tipografía y los dos temas del CRM Laboratory.
+|
+| Es una copia de la hoja de marca de la plataforma y no la misma
+| hoja a propósito. El laboratorio es la aplicación bajo prueba:
+| se sirve en /laboratory y tiene que sostenerse sola, sin
+| depender de ficheros de la plataforma que un día podrían quedar
+| detrás de la sesión. Lo que sí comparte es el criterio, que es
+| lo que se pedía: mismo naranja de marca, mismos grises
+| calculados para que cualquier texto llegue a 4,5:1, y el mismo
+| tema oscuro escrito como una lista de variables redefinidas.
+|
+| Las fuentes sí se traen de la plataforma —/fonts es público—
+| porque duplicar dos ficheros woff2 de cien kilos para tener la
+| misma tipografía no arregla nada.
+|
+*/
+
+@font-face {
+
+    font-family: "Inter Tight";
+    font-style: normal;
+    font-weight: 400 700;
+    font-display: swap;
+    src: url("/fonts/inter-tight-latin.woff2") format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC,
+                   U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+                   U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+                   U+2212, U+2215, U+FEFF, U+FFFD;
+
+}
+
+@font-face {
+
+    font-family: "Inter Tight";
+    font-style: normal;
+    font-weight: 400 700;
+    font-display: swap;
+    src: url("/fonts/inter-tight-latin-ext.woff2") format("woff2");
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7,
+                   U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF,
+                   U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB,
+                   U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| Tema claro
+|--------------------------------------------------------------------------
+*/
+
+:root {
+
+    /* Tipografía */
+
+    --tipografia:
+        "Inter Tight", "Segoe UI", Helvetica, Arial, sans-serif;
+
+    /* Color de marca */
+
+    --marca:            #F39433;
+    --marca-oscura:     #D97B18;
+    --marca-suave:      #FEF3E6;
+    --marca-borde:      #F8D6AC;
+
+    /* La tinta que se lee sobre el naranja: el blanco no llega. */
+
+    --sobre-marca:      #070707;
+
+    /* El naranja llevado hasta 5,2:1, para escribir con él. */
+
+    --marca-texto:      #A05B12;
+
+    /* Superficies */
+
+    --fondo:            #F1F2F4;
+    --superficie:       #FFFFFF;
+    --superficie-hundida: #F7F8F9;
+    --superficie-lateral: #FFFFFF;
+    --linea:            #E2E6E8;
+    --linea-fuerte:     #C9CFD4;
+
+    /* Tinta y grises */
+
+    --tinta:            #070707;
+    --texto:            #4B5157;
+    --texto-suave:      #666C71;
+    --texto-inerte:     #767C81;
+
+    /* Estados: no son decoración, son información */
+
+    --correcto:         #1A7B49;
+    --correcto-suave:   #E3F4EA;
+    --correcto-borde:   #B7E0C7;
+    --aviso:            #8A5A00;
+    --aviso-suave:      #FBF0DC;
+    --aviso-borde:      #E8CFA0;
+    --fallo:            #B3261E;
+    --fallo-suave:      #FBEAE9;
+    --fallo-borde:      #F0C9C6;
+    --omitido:          #5F6567;
+    --omitido-suave:    #EEF0F1;
+
+    /*
+     * El azul del CRM. No es color de marca: es el color de lo
+     * que se puede pulsar para ir a otro sitio —el nombre de un
+     * registro, una cita en el calendario—, y por eso no compite
+     * con el naranja de las acciones.
+     */
+
+    --enlace:           #274B6E;
+    --enlace-suave:     #E4EBF2;
+
+    /* Relieve */
+
+    --sombra:
+        0 1px 2px rgba(7, 7, 7, .04),
+        0 2px 6px rgba(7, 7, 7, .05);
+
+    --sombra-alta:
+        0 6px 24px rgba(7, 7, 7, .10);
+
+    --radio:        12px;
+    --radio-chico:  8px;
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| Tema oscuro
+|--------------------------------------------------------------------------
+|
+| Dos veces lo mismo a propósito: la primera para quien tiene el
+| sistema en oscuro y no ha elegido nada, la segunda para quien
+| ha pulsado el interruptor. Sin la primera, el sistema no se
+| respeta; sin la segunda, el interruptor no puede llevar la
+| contraria al sistema.
+|
+*/
+
+@media (prefers-color-scheme: dark) {
+
+    :root:not([data-tema="claro"]) {
+
+        --fondo:            #0E1013;
+        --superficie:       #171A1E;
+        --superficie-hundida: #1F2328;
+        --superficie-lateral: #131619;
+        --linea:            #2B3036;
+        --linea-fuerte:     #3D444B;
+
+        --tinta:            #F2F4F5;
+        --texto:            #C3C9CE;
+        --texto-suave:      #8C9399;
+        --texto-inerte:     #666D73;
+
+        --marca-suave:      #33260F;
+        --marca-borde:      #6A4E1F;
+        --marca-texto:      #F39433;
+
+        --correcto:         #4ADE80;
+        --correcto-suave:   #14301F;
+        --correcto-borde:   #245C3B;
+        --aviso:            #F0B860;
+        --aviso-suave:      #30240F;
+        --aviso-borde:      #5E491F;
+        --fallo:            #F87171;
+        --fallo-suave:      #341A19;
+        --fallo-borde:      #62312D;
+        --omitido:          #A8AFB5;
+        --omitido-suave:    #24282D;
+
+        --enlace:           #9EC5EC;
+        --enlace-suave:     #162432;
+
+        --sombra:
+            0 1px 2px rgba(0, 0, 0, .40),
+            0 2px 8px rgba(0, 0, 0, .30);
+
+        --sombra-alta:
+            0 8px 28px rgba(0, 0, 0, .55);
+
+    }
+
+}
+
+:root[data-tema="oscuro"] {
+
+    --fondo:            #0E1013;
+    --superficie:       #171A1E;
+    --superficie-hundida: #1F2328;
+    --superficie-lateral: #131619;
+    --linea:            #2B3036;
+    --linea-fuerte:     #3D444B;
+
+    --tinta:            #F2F4F5;
+    --texto:            #C3C9CE;
+    --texto-suave:      #8C9399;
+    --texto-inerte:     #666D73;
+
+    --marca-suave:      #33260F;
+    --marca-borde:      #6A4E1F;
+    --marca-texto:      #F39433;
+
+    --correcto:         #4ADE80;
+    --correcto-suave:   #14301F;
+    --correcto-borde:   #245C3B;
+    --aviso:            #F0B860;
+    --aviso-suave:      #30240F;
+    --aviso-borde:      #5E491F;
+    --fallo:            #F87171;
+    --fallo-suave:      #341A19;
+    --fallo-borde:      #62312D;
+    --omitido:          #A8AFB5;
+    --omitido-suave:    #24282D;
+
+    --enlace:           #9EC5EC;
+    --enlace-suave:     #162432;
+
+    --sombra:
+        0 1px 2px rgba(0, 0, 0, .40),
+        0 2px 8px rgba(0, 0, 0, .30);
+
+    --sombra-alta:
+        0 8px 28px rgba(0, 0, 0, .55);
+
+}

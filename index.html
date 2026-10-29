@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CRM Laboratory</title>
+
+    <link rel="stylesheet" href="css/marca.css">
+    <link rel="stylesheet" href="css/crm.css">
+    <link rel="stylesheet" href="css/home.css">
+
+    <!--
+    | El tema se fija antes de pintar nada, para que la página no
+    | aparezca un instante en claro antes de ponerse oscura.
+    -->
+
+    <script src="js/entorno.js"></script>
+    <script src="js/tema.js"></script>
+
+</head>
+
+<!--
+| `data-page="home"` estuvo aquí y ya no está.
+|
+| Decía a la plataforma cuál de sus interpretadores tenía que leer esta
+| pantalla, y era un atributo que sólo llevaba este fichero: ninguna
+| aplicación de verdad lo tiene, así que en ninguna se leía la entrada como
+| tal. Ahora la de entrada es la primera que se visita, que es lo que la hace
+| ser la entrada, y este laboratorio comprueba que se reconoce sin decírselo.
+|
+| `data-modulo` se queda: lo lee el propio laboratorio para saber qué sección
+| del menú está abierta.
+-->
+
+<body
+    data-modulo="home"
+    data-application="crm-laboratory"
+    data-discovery="true">
+
+<a class="saltar" href="#contenido">
+    Saltar al contenido
+</a>
+
+<div class="disposicion">
+
+    <aside class="lateral" id="lateral"></aside>
+
+    <main class="principal" id="contenido">
+
+        <header class="home-header">
+
+            <div>
+
+                <h1>CRM Laboratory</h1>
+
+                <p class="home-lema">
+                    Aplicación CRM de referencia para la
+                    AI Quality Assurance Platform
+                </p>
+
+            </div>
+
+            <span class="version">v1.1</span>
+
+        </header>
+
+        <!--
+        | Los indicadores.
+        |
+        | Van arriba y antes que los accesos a los módulos: lo
+        | primero que se quiere saber al entrar es cómo va el
+        | negocio, no dónde están las pantallas —para eso está el
+        | menú de la izquierda—.
+        -->
+
+        <section aria-labelledby="tituloIndicadores">
+
+            <h2 id="tituloIndicadores">Estado del laboratorio</h2>
+
+            <div class="metrics">
+
+                <div class="metricCard">
+
+                    <div class="metricValue" id="companiesCount">-</div>
+
+                    <div class="metricTitle">Empresas</div>
+
+                    <div class="metricHint"></div>
+
+                </div>
+
+                <div class="metricCard">
+
+                    <div class="metricValue" id="contactsCount">-</div>
+
+                    <div class="metricTitle">Contactos</div>
+
+                    <div class="metricHint"></div>
+
+                </div>
+
+                <div class="metricCard">
+
+                    <div class="metricValue" id="agendaCount">-</div>
+
+                    <div class="metricTitle">Citas</div>
+
+                    <div class="metricHint" id="agendaHint"></div>
+
+                </div>
+
+                <div class="metricCard">
+
+                    <div class="metricValue" id="quotesCount">-</div>
+
+                    <div class="metricTitle">Presupuestos</div>
+
+                    <div class="metricHint"></div>
+
+                </div>
+
+                <!--
+                | En curso: todo lo que sigue vivo. Se cuenta lo
+                | que no está aceptado, rechazado ni cancelado,
+                | que es lo que queda por cerrar.
+                -->
+
+                <div class="metricCard">
+
+                    <div class="metricValue" id="quotesOpenAmount">-</div>
+
+                    <div class="metricTitle">Presupuestos en curso</div>
+
+                    <div class="metricHint" id="quotesOpenHint"></div>
+
+                </div>
+
+                <div class="metricCard">
+
+                    <div class="metricValue ok" id="quotesWonAmount">-</div>
+
+                    <div class="metricTitle">Presupuestos aceptados</div>
+
+                    <div class="metricHint" id="quotesWonHint"></div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!--
+        | Las últimas acciones.
+        |
+        | Sale del mismo log que la pantalla de Actividad, aquí
+        | recortado a lo último: al entrar interesa saber qué se
+        | ha movido, no recorrer el histórico.
+        -->
+
+        <section aria-labelledby="tituloActividad">
+
+            <div class="seccionCabecera">
+
+                <h2 id="tituloActividad">Últimas acciones</h2>
+
+                <a class="verTodo" href="activity.html">
+                    Ver toda la actividad →
+                </a>
+
+            </div>
+
+            <ul id="ultimasAcciones" class="acciones"></ul>
+
+            <p
+                id="ultimasAccionesVacio"
+                class="aviso"
+                role="status">
+            </p>
+
+        </section>
+
+        <!--
+        | Los accesos a los módulos.
+        |
+        | El menú lateral lleva a los mismos sitios, y aun así
+        | siguen aquí: son los que llevan los atributos
+        | `data-module`, que es de donde la plataforma saca qué
+        | grupos funcionales tiene la aplicación y qué entidad
+        | maneja cada uno.
+        -->
+
+        <section aria-labelledby="tituloModulos">
+
+            <h2 id="tituloModulos">Módulos</h2>
+
+            <div class="module-grid">
+
+                <!-- EMPRESAS -->
+
+                <a
+                    class="module-card"
+                    href="companies.html"
+
+                    data-module="companies"
+                    data-name="Empresas"
+                    data-entity="company"
+                    data-type="crud"
+                    data-enabled="true">
+
+                    <div class="module-icon" aria-hidden="true">▤</div>
+
+                    <h3>Empresas</h3>
+
+                    <p>Gestión de empresas</p>
+
+                </a>
+
+                <!-- CONTACTOS -->
+
+                <a
+                    class="module-card"
+                    href="contacts.html"
+
+                    data-module="contacts"
+                    data-name="Contactos"
+                    data-entity="contact"
+                    data-type="crud"
+                    data-enabled="true">
+
+                    <div class="module-icon" aria-hidden="true">◇</div>
+
+                    <h3>Contactos</h3>
+
+                    <p>Gestión de contactos</p>
+
+                </a>
+
+                <!-- AGENDA -->
+
+                <a
+                    class="module-card"
+                    href="agenda.html"
+
+                    data-module="agenda"
+                    data-name="Agenda"
+                    data-entity="agenda"
+                    data-type="crud"
+                    data-enabled="true">
+
+                    <div class="module-icon" aria-hidden="true">◷</div>
+
+                    <h3>Agenda</h3>
+
+                    <p>Citas, en tabla o en calendario</p>
+
+                </a>
+
+                <!-- PRESUPUESTOS -->
+
+                <a
+                    class="module-card"
+                    href="quotes.html"
+
+                    data-module="quotes"
+                    data-name="Presupuestos"
+                    data-entity="quote"
+                    data-type="crud"
+                    data-enabled="true">
+
+                    <div class="module-icon" aria-hidden="true">◈</div>
+
+                    <h3>Presupuestos</h3>
+
+                    <p>Presupuestos, en kanban o en tabla</p>
+
+                </a>
+
+                <!-- USUARIOS -->
+
+                <a
+                    class="module-card"
+                    href="users.html"
+
+                    data-module="users"
+                    data-name="Usuarios"
+                    data-entity="user"
+                    data-type="crud"
+                    data-enabled="true">
+
+                    <div class="module-icon" aria-hidden="true">◍</div>
+
+                    <h3>Usuarios</h3>
+
+                    <p>Gestión de usuarios</p>
+
+                </a>
+
+                <!-- ROLES -->
+
+                <a
+                    class="module-card"
+                    href="roles.html"
+
+                    data-module="roles"
+                    data-name="Roles"
+                    data-entity="role"
+                    data-type="crud"
+                    data-enabled="true">
+
+                    <div class="module-icon" aria-hidden="true">⚙</div>
+
+                    <h3>Roles</h3>
+
+                    <p>Roles y permisos</p>
+
+                </a>
+
+                <!--
+                | ACTIVIDAD
+                |
+                | Está aquí y no sólo en el menú de la izquierda
+                | porque, de momento, una pantalla a la que sólo
+                | se llega por el menú no la encuentra nadie:
+                | los elementos del menú son botones cuyo único
+                | selector es una clase, y la exploración no
+                | prueba ésos. Está anotado como trabajo de la
+                | plataforma; mientras tanto, la pantalla se
+                | anuncia por donde sí se ve.
+                -->
+
+                <a
+                    class="module-card"
+                    href="activity.html"
+
+                    data-module="activity"
+                    data-name="Actividad"
+                    data-entity="activity"
+                    data-type="crud"
+                    data-enabled="true">
+
+                    <div class="module-icon" aria-hidden="true">≡</div>
+
+                    <h3>Actividad</h3>
+
+                    <p>Qué se ha hecho, quién y cuándo</p>
+
+                </a>
+
+                <!-- PARÁMETROS -->
+
+                <a
+                    class="module-card"
+                    href="settings.html"
+
+                    data-module="settings"
+                    data-name="Parámetros"
+                    data-entity="settings"
+                    data-type="settings"
+                    data-enabled="true">
+
+                    <div class="module-icon" aria-hidden="true">◉</div>
+
+                    <h3>Parámetros</h3>
+
+                    <p>Sociedad y agenda</p>
+
+                </a>
+
+                <!--
+                | MI PERFIL
+                |
+                | No es un CRUD y se anuncia como lo que es: una
+                | ficha. Es la primera pantalla del laboratorio sin
+                | rejilla, sin alta y sin borrado.
+                -->
+
+                <a
+                    class="module-card"
+                    href="profile.html"
+
+                    data-module="profile"
+                    data-name="Mi perfil"
+                    data-entity="profile"
+                    data-type="ficha"
+                    data-enabled="true">
+
+                    <div class="module-icon" aria-hidden="true">☺</div>
+
+                    <h3>Mi perfil</h3>
+
+                    <p>Datos personales, puesto y direcciones</p>
+
+                </a>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+    <script src="js/companies/companyRepository.js"></script>
+    <script src="js/contacts/contacts.js"></script>
+    <script src="js/agenda/appointmentRepository.js"></script>
+    <script src="js/quotes/quoteRepository.js"></script>
+    <script src="js/users/userRepository.js"></script>
+    <script src="js/roles/roleRepository.js"></script>
+
+    <!--
+    | El de aprobaciones también, aunque esta pantalla no las enseñe: el
+    | menú cuenta los registros de cada módulo, y si el repositorio no está
+    | cargado el contador sale de localStorage — que en una sesión recién
+    | abierta está vacío—. Con eso, la entrada del menú se llamaba
+    | "Aprobaciones" antes de visitarla y "Aprobaciones 7" después, y un
+    | nombre que cambia no sirve para señalar nada.
+    -->
+
+    <script src="js/approvals/approvalRepository.js"></script>
+
+    <script src="js/components/session.js"></script>
+    <script src="js/components/permissions.js"></script>
+    <script src="js/components/settings.js"></script>
+    <script src="js/components/orden.js"></script>
+    <script src="js/components/activityLog.js"></script>
+    <script src="js/components/layout.js"></script>
+
+    <script src="js/home.js"></script>
+
+</body>
+
+</html>

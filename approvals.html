@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Aprobaciones · CRM Laboratory</title>
+
+    <link rel="stylesheet" href="css/marca.css">
+    <link rel="stylesheet" href="css/crm.css">
+
+    <script src="js/entorno.js"></script>
+    <script src="js/tema.js"></script>
+
+</head>
+
+<body data-modulo="aprobaciones">
+
+<a class="saltar" href="#contenido">
+    Saltar al contenido
+</a>
+
+<div class="disposicion">
+
+    <aside class="lateral" id="lateral"></aside>
+
+    <main class="principal" id="contenido">
+
+<!--
+    Los descuentos que hay que aprobar.
+
+    Es la primera pantalla del laboratorio que **no ve el usuario
+    con el que se explora**. Aprobar pide el permiso "Aprobar", y
+    el Administrador no lo tiene: administrar la aplicación y
+    aprobar lo que pide el equipo de otro no son la misma cosa, y
+    en las aplicaciones de verdad tampoco.
+
+    Hasta ahora, todo lo que un papel no veía era **menos** —le
+    faltaba un botón, no le dejaban entrar—. Esto es lo otro: una
+    pantalla entera que sólo existe para quien tiene ese permiso,
+    con sus datos y sus acciones. Si la plataforma explora con un
+    usuario que no la ve, no la prueba nadie.
+-->
+
+<div id="vistaListado">
+
+    <h1>Aprobaciones</h1>
+
+    <section id="panelListado">
+
+        <div class="toolbar">
+
+            <div class="toolbar-left">
+
+                <label for="filtroEstado" class="filtroEtiqueta">
+                    Estado
+                </label>
+
+                <select id="filtroEstado">
+                    <option value="">Todos</option>
+                    <option value="Pendiente">Pendiente</option>
+                    <option value="Aprobada">Aprobada</option>
+                    <option value="Rechazada">Rechazada</option>
+                </select>
+
+            </div>
+
+            <input
+                id="search"
+                type="text"
+                placeholder="Buscar en las solicitudes...">
+
+        </div>
+
+        <table id="approvalsGrid">
+
+            <thead>
+
+                <tr>
+
+                    <th>Solicitud</th>
+                    <th>Quién la pide</th>
+                    <th>Presupuesto</th>
+                    <th>Descuento</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            </tbody>
+
+        </table>
+
+        <p
+            id="approvalsVacio"
+            class="aviso"
+            role="status">
+        </p>
+
+        <div id="paginacion"></div>
+
+    </section>
+
+</div>
+
+    <div id="modalContainer"></div>
+
+    </main>
+
+</div>
+
+    <script src="js/quotes/quoteRepository.js"></script>
+    <script src="js/users/userRepository.js"></script>
+    <script src="js/roles/roleRepository.js"></script>
+    <script src="js/approvals/approvalRepository.js"></script>
+
+    <script src="js/components/badge.js"></script>
+    <script src="js/components/toast.js"></script>
+    <script src="js/components/confirm.js"></script>
+    <script src="js/components/modal.js"></script>
+    <script src="js/components/navigation.js"></script>
+    <script src="js/components/session.js"></script>
+    <script src="js/components/permissions.js"></script>
+    <script src="js/components/activityLog.js"></script>
+    <script src="js/components/pagination.js"></script>
+    <script src="js/components/layout.js"></script>
+
+    <script src="js/approvals/app.js"></script>
+
+</body>
+
+</html>
